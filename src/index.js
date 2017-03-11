@@ -14,10 +14,9 @@ function slackResp(text, code = 200, type = TYPE_PUBLIC) {
 
 function handler(event, context, callback) {
 
-    const { body } = event;
-    const { command, text, token } = JSON.parse(body);
-    // eslint-disable-next-line camelcaseå
-    const user = body.user_name;
+    const body = JSON.parse(event.body || '{}');
+    const { command, text, token, user_name } = body;
+
 
     if (token !== process.env.SLACK_TOKEN) {
         return callback(null,
@@ -26,7 +25,8 @@ function handler(event, context, callback) {
     }
 
     // todo "route" to a handler based on command
-    const message = `${user} requested to ${command} ${text}`;
+    // eslint-disable-next-line camelcaseå
+    const message = `${user_name} requested to ${command} ${text}`;
 
     return callback(null,
         slackResp(message)
