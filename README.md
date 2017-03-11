@@ -8,6 +8,11 @@ An AWS Lambda to control local Spotify playback via Slack. Includes package scri
 [![Dev Dependency Status](https://david-dm.org/chrisdevwords/slack-spotify-lambda/dev-status.svg)](https://david-dm.org/chrisdevwords/slack-spotify-lambda?type=dev)
 [![Known Vulnerabilities](https://snyk.io/test/github/chrisdevwords/slack-spotify-lambda/badge.svg)](https://snyk.io/test/github/chrisdevwords/slack-spotify-lambda)
 
+Clone and run an instance of [Spotify Local](https://github.com/chrisdevwords/spotify-local) on a Mac mini and deploy this Lambda with the following Environmental variables:
+```
+SPOTIFY_LOCAL_URL=https://xxx.ngrok.io
+SLACK_TOKEN=THE_TOKEN_YOUR_SLACK_APP_SENDS_IN_POST_BODY
+```
 
 Requirementsf
 ------------
