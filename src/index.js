@@ -18,14 +18,10 @@ function handler(event, context, callback) {
     const { command, text, token } = body || {};
     // eslint-disable-next-line camelcaseå
     const user = body.user_name;
-    const {
-        SLACK_TOKEN,
-        SPOTIFY_LOCAL_URL
-    } = process.env;
 
-    if (token !== SLACK_TOKEN) {
+    if (token !== process.env.SLACK_TOKEN) {
         return callback(null,
-            slackResp('Token is invalid.', 401, TYPE_PRIVATE)
+            slackResp(`Token: "${token}" is invalid.`, 401, TYPE_PRIVATE)
         );
     }
 
