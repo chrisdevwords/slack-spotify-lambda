@@ -15,7 +15,7 @@ function slackResp(text, code = 200, type = TYPE_PUBLIC) {
 function handler(event, context, callback) {
 
     const { body } = event;
-    const { command, text, token } = body || {};
+    const { command, text, token } = JSON.parse(body);
     // eslint-disable-next-line camelcaseå
     const user = body.user_name;
 
