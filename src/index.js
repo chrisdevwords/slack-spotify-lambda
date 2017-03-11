@@ -14,23 +14,32 @@ function slackResp(text, code = 200, type = TYPE_PUBLIC) {
 
 function handler(event, context, callback) {
 
-    const body = JSON.parse(event.body || '{}');
-    const { command, text, token, user_name } = body;
 
 
-    if (token !== process.env.SLACK_TOKEN) {
+    try {
+
+        const body = JSON.parse(event.body || '{}');
+        const { command, text, token, user_name } = body;
+
+        if (token !== process.env.SLACK_TOKEN) {
+            return callback(null,
+                slackResp(`Token: "${token}" is invalid.`, 401, TYPE_PRIVATE)
+            );
+        }
+
+        // todo "route" to a handler based on command
+        // eslint-disable-next-line camelcaseå
+        const message = `${user_name} requested to ${command} ${text}`;
+
         return callback(null,
-            slackResp(`Token: "${token}" is invalid.`, 401, TYPE_PRIVATE)
+            slackResp(message)
+        );
+    } catch (err) {
+        return callback(null,
+            slackResp(typeof event.body + ':' + event.body, 500)
         );
     }
 
-    // todo "route" to a handler based on command
-    // eslint-disable-next-line camelcaseå
-    const message = `${user_name} requested to ${command} ${text}`;
-
-    return callback(null,
-        slackResp(message)
-    );
 }
 
 export {
