@@ -9,7 +9,7 @@ export function setAPIRoot(url) {
     _apiRoot = url;
 }
 
-export function process({ text, user_id, command }) {
+export function exec({ text, user_id, command }) {
 
     switch(command) {
         case '/play':

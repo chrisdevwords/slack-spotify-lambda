@@ -1,11 +1,12 @@
 
+import PATH from 'path';
 import mocha from 'mocha';
 import chai from 'chai';
 import request from 'request-promise-native';
 import sinon from 'sinon';
+import dotenv from 'dotenv';
 
 import { handler } from '../src';
-import testEnv from '../src/test-env-config';
 import mockPlaying from './mock/local/spotify/api/playing.json';
 
 const { beforeEach, afterEach, describe, it } = mocha;
@@ -13,6 +14,9 @@ const { expect, config } = chai;
 
 config.includeStack = true;
 
+dotenv.config({
+    path: PATH.resolve( __dirname, '../', 'test/.env')
+});
 
 const mockSlackBody = (token, user, text, command) =>
     `token=${token}&command=${encodeURIComponent(command)}` +
@@ -26,7 +30,7 @@ describe('The Spotify Slack Lambda index.handler', () => {
 
         context('with a valid token', () => {
 
-            const token = testEnv.SLACK_TOKEN;
+            const token = process.env.SLACK_TOKEN;
 
             context('with a /playing command', () => {
 
@@ -122,7 +126,7 @@ describe('The Spotify Slack Lambda index.handler', () => {
         context('with an unexpected body', () => {
 
             const body = JSON.stringify({
-                token: testEnv.SLACK_TOKEN,
+                token: process.env.SLACK_TOKEN,
                 user_name: user,
                 stuff : [1, 2, 3]
             });

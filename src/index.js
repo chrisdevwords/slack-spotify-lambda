@@ -1,9 +1,7 @@
 
 import { response } from './util/lambda';
 import { parseFormString } from './util/parse';
-import { process, setAPIRoot } from './commands';
-import testEnv from './test-env-config';
-
+import { exec, setAPIRoot } from './commands';
 
 const TYPE_PRIVATE = 'ephemeral';
 const TYPE_PUBLIC = 'in_channel';
@@ -21,17 +19,10 @@ function slackResp(text, code = 200, type = TYPE_PUBLIC) {
 
 function handler(event, context, callback) {
 
-    let slackToken;
-
-    console.log('***', JSON.stringify(process.env));
-
-    try {
-        slackToken = process.env.SLACK_TOKEN;
-        setAPIRoot(process.env.SPOTIFY_LOCAL_URL);
-    } catch (err) {
-        slackToken = testEnv.SLACK_TOKEN;
-        setAPIRoot(testEnv.SPOTIFY_LOCAL_URL);
-    }
+    const {
+        SLACK_TOKEN,
+        SPOTIFY_LOCAL_URL
+    } = process.env;
 
     const {
         command,
@@ -40,7 +31,7 @@ function handler(event, context, callback) {
         user_name
     } = parseFormString(event.body);
 
-    if (token !== slackToken) {
+    if (token !== SLACK_TOKEN) {
         callback(null,
             slackResp(
                 INVALID_TOKEN,
@@ -49,7 +40,8 @@ function handler(event, context, callback) {
             )
         );
     } else {
-        process({ command, text, user_name })
+        setAPIRoot(SPOTIFY_LOCAL_URL);
+        exec({ command, text, user_name })
             .then((message) => {
                 callback(null,
                     slackResp(message)
