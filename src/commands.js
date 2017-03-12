@@ -1,7 +1,9 @@
 
 import request from 'request-promise-native';
-
-export const CMD_NOT_SUPPORTED = 'Command not supported.';
+import {
+    CMD_NOT_SUPPORTED,
+    NOW_PLAYING
+} from './slack-resp';
 
 let _apiRoot;
 
@@ -77,14 +79,16 @@ export function skipTrack() {
 }
 
 export function getPlaying() {
+
     const uri = `${_apiRoot}/api/spotify/playing/`;
+
     return request
         .get({
             uri,
             json: true
         })
-        .then((resp) => {
-            return resp;
+        .then(({ track }) => {
+            return NOW_PLAYING(track)
         });
 }
 

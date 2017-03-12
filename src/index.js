@@ -1,21 +1,12 @@
 
-import { response } from './util/lambda';
 import { parseFormString } from './util/parse';
 import { exec, setAPIRoot } from './commands';
-
-const TYPE_PRIVATE = 'ephemeral';
-const TYPE_PUBLIC = 'in_channel';
-
-const INVALID_TOKEN = 'Token is invalid.';
-
-function slackResp(text, code = 200, type = TYPE_PUBLIC) {
-    return response({
-        // eslint-disable-next-line camelcase
-        response_type: type,
-        text
-    }, code);
-}
-
+import {
+    slackResp,
+    INVALID_TOKEN,
+    TYPE_PRIVATE,
+    TYPE_PUBLIC
+} from './slack-resp';
 
 function handler(event, context, callback) {
 

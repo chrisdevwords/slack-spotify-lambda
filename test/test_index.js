@@ -55,10 +55,12 @@ describe('The Spotify Slack Lambda index.handler', () => {
                     handler(event, {}, (err, resp) => {
                         try {
                             expect(resp.statusCode)
+
                                 .to.eq(200);
                             done()
                         } catch (err) {
-                            done(err);
+
+                            done(resp);
                         }
                     });
                 });
