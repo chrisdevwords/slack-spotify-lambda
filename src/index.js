@@ -1,9 +1,18 @@
 
 import { response } from './util/lambda';
 import { parseFormString } from './util/parse';
+import { process, setAPIRoot } from './commands';
+import testEnv from './test-env-config';
+
 
 const TYPE_PRIVATE = 'ephemeral';
 const TYPE_PUBLIC = 'in_channel';
+
+const INVALID_TOKEN = 'Token is invalid.'
+
+const ENV = process.env || testEnv;
+
+const { SLACK_TOKEN, SPOTIFY_LOCAL_URL } = ENV;
 
 function slackResp(text, code = 200, type = TYPE_PUBLIC) {
     return response({
