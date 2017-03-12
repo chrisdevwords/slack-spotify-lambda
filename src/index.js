@@ -4,8 +4,7 @@ import { exec, setAPIRoot } from './commands';
 import {
     slackResp,
     INVALID_TOKEN,
-    TYPE_PRIVATE,
-    TYPE_PUBLIC
+    TYPE_PRIVATE
 } from './slack-resp';
 
 function handler(event, context, callback) {

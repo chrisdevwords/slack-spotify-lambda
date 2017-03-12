@@ -10,12 +10,16 @@ const INVALID_TOKEN = 'Token is invalid.';
 
 // message templates
 export const CMD_NOT_SUPPORTED = 'Command not supported.';
-export const NOW_PLAYING = ({ name, artist, requestedBy }) =>
-    `Now playing "${name}" by ${artist} requested by ${requestedBy}.`;
 
-export const SKIPPED = (nowPlaying, skipped) =>
+export const NOW_PLAYING = (track) =>
+    `Now playing ${TRACK(track)}`;
+
+export const SKIPPED = (current, skipped) =>
     `Skipped "${skipped.name}" requested by ${skipped.requestedBy}. ` +
-        NOW_PLAYING(nowPlaying);
+        NOW_PLAYING(current);
+
+export const TRACK = ({ name, artist, requestedBy }) =>
+    `"${name}" by ${artist} requested by ${requestedBy}. `
 
 export function slackResp(text, code = 200, type = TYPE_PUBLIC) {
     return response({

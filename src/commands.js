@@ -2,7 +2,8 @@
 import request from 'request-promise-native';
 import {
     CMD_NOT_SUPPORTED,
-    NOW_PLAYING
+    NOW_PLAYING,
+    SKIPPED
 } from './slack-resp';
 
 let _apiRoot;
@@ -43,8 +44,8 @@ export function playTrack(track, requestedBy) {
             body,
             json: true
         })
-        .then((resp) => {
-            return resp;
+        .then(({ track }) => {
+            return NOW_PLAYING(track)
         });
 }
 
@@ -72,8 +73,8 @@ export function skipTrack() {
             uri,
             json: true
         })
-        .then((resp) => {
-            return resp;
+        .then(({ currentTrack, skippedTrack }) => {
+            return SKIPPED(currentTrack, skippedTrack)
         });
 
 }
@@ -99,8 +100,11 @@ export function getQueue() {
             uri,
             json: true
         })
-        .then((resp) => {
-            return resp;
+        .then(({ tracks }) => {
+            if (!tracks.length) {
+                return 'No tracks currently queued.';
+            }
+            return `${tracks.length} in the queue.`;
         });
 }
 
