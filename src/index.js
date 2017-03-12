@@ -24,37 +24,34 @@ function slackResp(text, code = 200, type = TYPE_PUBLIC) {
 
 function handler(event, context, callback) {
 
-    try {
+    const {
+        command,
+        text,
+        token,
+        user_name
+    } = parseFormString(event.body);
 
-        const {
-            SLACK_TOKEN
-        } = process.env;
-
-        const {
-            command,
-            text,
-            token,
-            user_name
-        } = parseFormString(event.body);
-
-        if (token !== SLACK_TOKEN) {
-            return callback(null,
-                slackResp(`Token: "${token}" is invalid.`, 401, TYPE_PRIVATE)
-            );
-        }
-
-        // todo "route" to a handler based on command
-        // eslint-disable-next-line camelcase
-        const message = `${user_name} requested to ${command} ${text}`;
-
-        return callback(null,
-            slackResp(message)
+    if (token !== SLACK_TOKEN) {
+        callback(null,
+            slackResp(
+                INVALID_TOKEN,
+                401,
+                TYPE_PRIVATE
+            )
         );
-
-    } catch (err) {
-        return callback(null,
-            slackResp(err.message, 500)
-        );
+    } else {
+        setAPIRoot(SPOTIFY_LOCAL_URL);
+        process({ command, text, user_name })
+            .then((message) => {
+                callback(null,
+                    slackResp(message)
+                );
+            })
+            .catch(({ message, statusCode = 500 }) => {
+                callback(null,
+                    slackResp(message, statusCode, TYPE_PRIVATE)
+                );
+            });
     }
 }
 
