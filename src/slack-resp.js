@@ -12,14 +12,17 @@ const INVALID_TOKEN = 'Token is invalid.';
 export const CMD_NOT_SUPPORTED = 'Command not supported.';
 
 export const NOW_PLAYING = (track) =>
-    `Now playing ${TRACK(track)}`;
+    `Now playing ${TRACK(track)}.`;
 
 export const SKIPPED = (current, skipped) =>
     `Skipped "${skipped.name}" requested by ${skipped.requestedBy}. ` +
         NOW_PLAYING(current);
 
+export const ADDED  = (track, position) =>
+    `${TRACK(track)} at position ${position}.`;
+
 export const TRACK = ({ name, artist, requestedBy }) =>
-    `"${name}" by ${artist} requested by ${requestedBy}. `
+    `"${name}" by ${artist} requested by ${requestedBy}`;
 
 export function slackResp(text, code = 200, type = TYPE_PUBLIC) {
     return response({

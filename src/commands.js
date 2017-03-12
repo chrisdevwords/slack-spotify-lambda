@@ -3,7 +3,8 @@ import request from 'request-promise-native';
 import {
     CMD_NOT_SUPPORTED,
     NOW_PLAYING,
-    SKIPPED
+    SKIPPED,
+    ADDED
 } from './slack-resp';
 
 let _apiRoot;
@@ -61,8 +62,8 @@ export function queueTrack(track, requestedBy) {
             body,
             json: true
         })
-        .then((resp) => {
-            return resp;
+        .then(({ track, position }) => {
+            return ADDED(track, position);
         });
 }
 
