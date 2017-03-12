@@ -10,10 +10,6 @@ const TYPE_PUBLIC = 'in_channel';
 
 const INVALID_TOKEN = 'Token is invalid.'
 
-const ENV = process.env || testEnv;
-
-const { SLACK_TOKEN, SPOTIFY_LOCAL_URL } = ENV;
-
 function slackResp(text, code = 200, type = TYPE_PUBLIC) {
     return response({
         // eslint-disable-next-line camelcase
@@ -23,6 +19,11 @@ function slackResp(text, code = 200, type = TYPE_PUBLIC) {
 }
 
 function handler(event, context, callback) {
+
+    const {
+        SLACK_TOKEN,
+        SPOTIFY_LOCAL_URL
+    } = process.env || testEnv;
 
     const {
         command,
