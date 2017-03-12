@@ -13,7 +13,9 @@ export const CMD_NOT_SUPPORTED = 'Command not supported.';
 export const NOW_PLAYING = ({ name, artist, requestedBy }) =>
     `Now playing "${name}" by ${artist} requested by ${requestedBy}.`;
 
-
+export const SKIPPED = (nowPlaying, skipped) =>
+    `Skipped "${skipped.name}" requested by ${skipped.requestedBy}. ` +
+        NOW_PLAYING(nowPlaying);
 
 export function slackResp(text, code = 200, type = TYPE_PUBLIC) {
     return response({
