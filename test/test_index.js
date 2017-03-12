@@ -118,5 +118,27 @@ describe('The Spotify Slack Lambda index.handler', () => {
                 });
             });
         });
+
+        context('with an unexpected body', () => {
+
+            const body = JSON.stringify({
+                token: testEnv.SLACK_TOKEN,
+                user_name: user,
+                stuff : [1, 2, 3]
+            });
+            const event = { body };
+
+            it('responds with a 401', (done) => {
+                handler(event, {}, (err, resp) => {
+                    try {
+                        expect(resp.statusCode)
+                            .to.eq(401);
+                        done()
+                    } catch (err) {
+                        done(err);
+                    }
+                });
+            });
+        });
     });
 });
