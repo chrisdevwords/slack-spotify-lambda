@@ -6,7 +6,7 @@ export const TYPE_PRIVATE = 'ephemeral';
 export const TYPE_PUBLIC = 'in_channel';
 
 // error messages
-const INVALID_TOKEN = 'Token is invalid.';
+export const INVALID_TOKEN = 'Token is invalid.';
 
 // message templates
 export const CMD_NOT_SUPPORTED = 'Command not supported.';
