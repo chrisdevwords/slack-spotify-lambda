@@ -21,7 +21,7 @@ Requirementsf
 * I recommend using [NVM](https://github.com/creationix/nvm)
 
 ## Running Tests
-This project includes [Mocha](https://mochajs.org/) and [Chai](http://chaijs.com/) w/ [Chai-as-promised](https://www.npmjs.com/package/chai-as-promised) for testing service data parsing. If you add to this, write more tests. And run them:
+This project includes [Mocha](https://mochajs.org/) and [Chai](http://chaijs.com/). If you add to this, write more tests. And run them:
 ````
 $ npm test
 ````
