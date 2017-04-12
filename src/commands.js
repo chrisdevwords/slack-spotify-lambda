@@ -13,26 +13,6 @@ export function setAPIRoot(url) {
     _apiRoot = url;
 }
 
-export function exec({ text, user_id, command }) {
-
-    switch(command) {
-        case '/play':
-            return playTrack(text, user_id);
-        case '/add':
-            return queueTrack(text, user_id);
-        case '/skip':
-            return skipTrack();
-        case '/playing':
-            return getPlaying();
-        case '/queue':
-            return getQueue();
-        default:
-            const error = new Error(CMD_NOT_SUPPORTED);
-            error.statusCode = 400;
-            return Promise.reject(error);
-    }
-}
-
 export function playTrack(track, requestedBy) {
     const uri = `${_apiRoot}/api/spotify/playing`;
     const body = {
@@ -45,9 +25,10 @@ export function playTrack(track, requestedBy) {
             body,
             json: true
         })
-        .then(({ track }) => {
-            return NOW_PLAYING(track)
-        });
+        .then(resp =>
+            // eslint-disable-next-line babel/new-cap
+            NOW_PLAYING(resp.track)
+        );
 }
 
 export function queueTrack(track, requestedBy) {
@@ -62,9 +43,10 @@ export function queueTrack(track, requestedBy) {
             body,
             json: true
         })
-        .then(({ track, position }) => {
-            return ADDED(track, position);
-        });
+        .then(resp =>
+            // eslint-disable-next-line babel/new-cap
+            ADDED(resp.track, resp.position)
+        );
 }
 
 export function skipTrack() {
@@ -74,9 +56,10 @@ export function skipTrack() {
             uri,
             json: true
         })
-        .then(({ currentTrack, skippedTrack }) => {
-            return SKIPPED(currentTrack, skippedTrack)
-        });
+        .then(({ currentTrack, skippedTrack }) =>
+            // eslint-disable-next-line babel/new-cap
+            SKIPPED(currentTrack, skippedTrack)
+        );
 
 }
 
@@ -89,9 +72,10 @@ export function getPlaying() {
             uri,
             json: true
         })
-        .then(({ track }) => {
-            return NOW_PLAYING(track)
-        });
+        .then(({ track }) =>
+            // eslint-disable-next-line babel/new-cap
+            NOW_PLAYING(track)
+        );
 }
 
 export function getQueue() {
@@ -107,6 +91,29 @@ export function getQueue() {
             }
             return `${tracks.length} in the queue.`;
         });
+}
+
+
+export function exec({ text, user_id, command }) {
+
+    let error;
+
+    switch (command) {
+        case '/play':
+            return playTrack(text, user_id);
+        case '/add':
+            return queueTrack(text, user_id);
+        case '/skip':
+            return skipTrack();
+        case '/playing':
+            return getPlaying();
+        case '/queue':
+            return getQueue();
+        default:
+            error = new Error(CMD_NOT_SUPPORTED);
+            error.statusCode = 400;
+            return Promise.reject(error)
+    }
 }
 
 export default {};
