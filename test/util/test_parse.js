@@ -6,6 +6,7 @@ import { parseFormString } from '../../src/util/parse';
 
 const { beforeEach, afterEach, describe, it } = mocha;
 const { expect, config } = chai;
+const context = describe;
 
 config.includeStack = true;
 

@@ -11,6 +11,7 @@ import mockPlaying from './mock/local/spotify/api/playing.json';
 
 const { beforeEach, afterEach, describe, it } = mocha;
 const { expect, config } = chai;
+const context = describe;
 
 config.includeStack = true;
 
@@ -58,9 +59,8 @@ describe('The Spotify Slack Lambda index.handler', () => {
 
                                 .to.eq(200);
                             done()
-                        } catch (err) {
-
-                            done(resp);
+                        } catch (error) {
+                            done(error);
                         }
                     });
                 });
@@ -79,8 +79,8 @@ describe('The Spotify Slack Lambda index.handler', () => {
                             expect(resp.statusCode)
                                 .to.eq(400);
                             done()
-                        } catch (err) {
-                            done(err);
+                        } catch (error) {
+                            done(error);
                         }
                     });
                 });
@@ -101,8 +101,8 @@ describe('The Spotify Slack Lambda index.handler', () => {
                         expect(resp.statusCode)
                             .to.eq(401);
                         done()
-                    } catch (err) {
-                        done(err);
+                    } catch (error) {
+                        done(error);
                     }
                 });
             });
@@ -118,8 +118,8 @@ describe('The Spotify Slack Lambda index.handler', () => {
                         expect(resp.statusCode)
                             .to.eq(401);
                         done()
-                    } catch (err) {
-                        done(err);
+                    } catch (error) {
+                        done(error);
                     }
                 });
             });
@@ -140,8 +140,8 @@ describe('The Spotify Slack Lambda index.handler', () => {
                         expect(resp.statusCode)
                             .to.eq(401);
                         done()
-                    } catch (err) {
-                        done(err);
+                    } catch (error) {
+                        done(error);
                     }
                 });
             });
