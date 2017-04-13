@@ -11,18 +11,20 @@ export const INVALID_TOKEN = 'Token is invalid.';
 // message templates
 export const CMD_NOT_SUPPORTED = 'Command not supported.';
 
-export const NOW_PLAYING = (track) =>
-    `Now playing ${TRACK(track)}.`;
-
-export const SKIPPED = (current, skipped) =>
-    `Skipped "${skipped.name}" requested by ${skipped.requestedBy}. ` +
-        NOW_PLAYING(current);
-
-export const ADDED  = (track, position) =>
-    `${TRACK(track)} at position ${position}.`;
-
 export const TRACK = ({ name, artist, requestedBy }) =>
     `"${name}" by ${artist} requested by ${requestedBy}`;
+
+export const ADDED  = (track, position) =>
+    // eslint-disable-next-line babel/new-cap
+    `${TRACK(track)} at position ${position}.`;
+
+export const NOW_PLAYING = track =>
+    // eslint-disable-next-line babel/new-cap
+    `Now playing ${TRACK(track)}.`;
+
+export const SKIPPED = (current, { name, requestedBy }) =>
+    // eslint-disable-next-line babel/new-cap
+    `Skipped "${name}" requested by ${requestedBy}. ${NOW_PLAYING(current)}`;
 
 export function slackResp(text, code = 200, type = TYPE_PUBLIC) {
     return response({
