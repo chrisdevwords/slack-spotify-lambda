@@ -94,15 +94,15 @@ export function getQueue() {
 }
 
 
-export function exec({ text, user_id, command }) {
+export function exec({ text, user_name, command }) {
 
     let error;
 
     switch (command) {
         case '/play':
-            return playTrack(text, user_id);
+            return playTrack(text, user_name);
         case '/add':
-            return queueTrack(text, user_id);
+            return queueTrack(text, user_name);
         case '/skip':
             return skipTrack();
         case '/playing':
