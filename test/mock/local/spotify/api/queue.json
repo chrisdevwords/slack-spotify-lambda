@@ -1,0 +1,22 @@
+{
+  "tracks": [
+    {
+      "uri": "spotify:track:4RY96Asd9IefaL3X4LOLZ8",
+      "name": "In Da Club",
+      "artist": "50 Cent",
+      "requestedBy": "API"
+    },
+    {
+      "uri": "spotify:track:2jH6E9KjyftbFw0cc5nwiG",
+      "name": "She's Gone",
+      "artist": "Tindersticks",
+      "requestedBy": "API"
+    },
+    {
+      "uri": "spotify:track:55teLoqzgI0Wh9NjpSpWHA",
+      "name": "Love Machine - Instrumental Remix",
+      "artist": "Wham!",
+      "requestedBy": "API"
+    }
+  ]
+}
