@@ -1,7 +1,6 @@
 
 import {
-    parseFormString,
-    processRequestError
+    parseFormString
 } from './util/parse';
 import { exec, setAPIRoot } from './commands';
 import {
@@ -40,7 +39,6 @@ function handler(event, context, callback) {
                     slackResp(message)
                 );
             })
-            .catch(processRequestError)
             .catch(({ message, statusCode = 500 }) => {
                 callback(null,
                     slackResp(message, statusCode, TYPE_PRIVATE)
