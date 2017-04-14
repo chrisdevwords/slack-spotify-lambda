@@ -33,7 +33,9 @@ export const SKIPPED = (current, { name, requestedBy }) =>
     `Skipped "${name}" requested by ${requestedBy}. ${NOW_PLAYING(current)}`;
 
 export function printQueue(tracks) {
-    return tracks.map(track => `${TRACK(track)}\n`)
+    return tracks
+        .map(TRACK)
+        .join('\n');
 }
 
 export const QUEUE = tracks =>
