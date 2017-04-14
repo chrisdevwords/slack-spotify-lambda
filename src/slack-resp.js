@@ -36,7 +36,7 @@ export function printQueue(tracks) {
     return tracks.map(track => `${TRACK(track)}\n`)
 }
 
-export const QUEUE = ({ tracks }) =>
+export const QUEUE = tracks =>
     `${tracks.length} tracks queued... \n ${printQueue(tracks)}`;
 
 export function slackResp(text, code = 200, type = TYPE_PUBLIC) {
