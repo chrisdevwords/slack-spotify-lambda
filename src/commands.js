@@ -4,7 +4,9 @@ import {
     CMD_NOT_SUPPORTED,
     NOW_PLAYING,
     SKIPPED,
-    ADDED
+    ADDED,
+    CURRENT_PL,
+    PL_SET
 } from './slack-resp';
 
 let _apiRoot;
@@ -93,6 +95,33 @@ export function getQueue() {
         });
 }
 
+export function getPlaylist() {
+    const uri = `${_apiRoot}/api/spotify/playlist`;
+    return request
+        .get({
+            uri,
+            json: true
+        })
+        .then(({ playlist }) =>
+            // eslint-disable-next-line babel/new-cap
+            CURRENT_PL(playlist)
+        );
+}
+
+export function setPlaylist(playlist) {
+    const uri = `${_apiRoot}/api/spotify/playlist`;
+    const body = { playlist }
+    return request
+        .post({
+            uri,
+            body,
+            json: true
+        })
+        .then(resp =>
+            // eslint-disable-next-line babel/new-cap
+            PL_SET(resp.playlist)
+        );
+}
 
 export function exec({ text, user_name, command }) {
 
@@ -109,6 +138,11 @@ export function exec({ text, user_name, command }) {
             return getPlaying();
         case '/queue':
             return getQueue();
+        case '/playlist':
+            if (text) {
+                return setPlaylist(text);
+            }
+            return getPlaylist();
         default:
             error = new Error(CMD_NOT_SUPPORTED);
             error.statusCode = 400;

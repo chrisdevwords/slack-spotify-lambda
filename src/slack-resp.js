@@ -14,6 +14,12 @@ export const CMD_NOT_SUPPORTED = 'Command not supported.';
 export const TRACK = ({ name, artist, requestedBy }) =>
     `"${name}" by ${artist} requested by ${requestedBy}`;
 
+export const CURRENT_PL = ({ title }) =>
+    `Current Playlist is "${title}".`;
+
+export const PL_SET = ({ title }) =>
+    `Current Playlist set to "${title}".`;
+
 export const ADDED  = (track, position) =>
     // eslint-disable-next-line babel/new-cap
     `${TRACK(track)} at position ${position}.`;
