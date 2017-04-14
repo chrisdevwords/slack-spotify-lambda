@@ -32,6 +32,13 @@ export const SKIPPED = (current, { name, requestedBy }) =>
     // eslint-disable-next-line babel/new-cap
     `Skipped "${name}" requested by ${requestedBy}. ${NOW_PLAYING(current)}`;
 
+export function printQueue(tracks) {
+    return tracks.map(track => `${TRACK(track)}\n`)
+}
+
+export const QUEUE = ({ tracks }) =>
+    `${tracks.length} tracks queued... \n ${printQueue(tracks)}`;
+
 export function slackResp(text, code = 200, type = TYPE_PUBLIC) {
     return response({
         // eslint-disable-next-line camelcase

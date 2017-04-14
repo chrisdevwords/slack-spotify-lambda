@@ -6,7 +6,8 @@ import {
     SKIPPED,
     ADDED,
     CURRENT_PL,
-    PL_SET
+    PL_SET,
+    QUEUE
 } from './slack-resp';
 
 let _apiRoot;
@@ -91,7 +92,7 @@ export function getQueue() {
             if (!tracks.length) {
                 return 'No tracks currently queued.';
             }
-            return `${tracks.length} in the queue.`;
+            return QUEUE(tracks);
         });
 }
 
