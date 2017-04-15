@@ -124,6 +124,15 @@ export function setPlaylist(playlist) {
         );
 }
 
+export function toggleShuffle() {
+    const uri = `${_apiRoot}/api/spotify/shuffle`;
+    return request
+        .post({
+            uri,
+            json: true
+        });
+}
+
 export function exec({ text, user_name, command }) {
 
     let error;
@@ -139,6 +148,8 @@ export function exec({ text, user_name, command }) {
             return getPlaying();
         case '/queue':
             return getQueue();
+        case '/shuffle':
+            return toggleShuffle();
         case '/playlist':
             if (text) {
                 return setPlaylist(text);
