@@ -14,4 +14,4 @@ deployment:
     branch: develop
     commands:
           - npm run build
-          - aws lambda update-function-code --function-name $STAGING_FUNCTION_NAME --region us-east-1 --zip-file fileb://files.zip
+          - aws lambda update-function-code --function-name $DEV_FUNCTION_NAME --region us-east-1 --zip-file fileb://files.zip
