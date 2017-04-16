@@ -1,13 +1,14 @@
-
+import fs from 'fs';
 import PATH from 'path';
 import mocha from 'mocha';
 import chai from 'chai';
 import request from 'request-promise-native';
 import sinon from 'sinon';
-import dotenv from 'dotenv';
 
 import { exec, setAPIRoot } from '../src/commands';
-
+import {
+    NOW_PLAYING
+} from '../src/slack-resp';
 const { beforeEach, afterEach, describe, it } = mocha;
 const { expect, config } = chai;
 const context = describe;
@@ -27,6 +28,7 @@ const openMock = (filePath) => {
             } else {
                 const json = JSON.parse(data.toString());
                 if (json.error) {
+                    // todo i think this needs to actually throw an error
                     reject({
                         error: {
                             error: json.error
@@ -47,6 +49,39 @@ describe('The Slack commands for Spotify Local ', () => {
         // todo this will all be mocks
         setAPIRoot('http://localhost:5000');
         done();
+    });
+
+    describe('the /playing command', () => {
+        const command = '/playing';
+
+        context('when the spotify local server is running', () => {
+            beforeEach((done) => {
+                sinon.stub(request, 'get')
+                    .callsFake(() =>
+                        openMock('local/spotify/api/playing')
+                    );
+                done();
+            });
+
+            afterEach((done) => {
+                request.get.restore();
+                done();
+            });
+
+            it('resolves with text for slack', (done) => {
+                exec({ command })
+                    .then((text) => {
+                        expect(text).to.be.a('string');
+                        expect(text).to.eq(NOW_PLAYING({
+                            name: 'Sax Attack',
+                            artist: 'Kenny G',
+                            requestedBy: 'Default Playlist'
+                        }));
+                        done();
+                    })
+                    .catch(done);
+            });
+        });
     });
 
     describe('the /shuffle command', () => {
