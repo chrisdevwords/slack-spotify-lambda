@@ -34,6 +34,9 @@ export const SKIPPED = (current, { name, requestedBy }) =>
     // eslint-disable-next-line babel/new-cap
     `Skipped "${name}" requested by ${requestedBy}. ${NOW_PLAYING(current)}`;
 
+export const ALBUM_ADDED = (position, { artist, name }, by) =>
+    `Album "${name}" by ${artist} queued by ${by} at position ${position}`;
+
 export function printQueue(tracks) {
     return tracks
         .map(TRACK)

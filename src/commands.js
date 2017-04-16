@@ -5,6 +5,7 @@ import {
     NOW_PLAYING,
     SKIPPED,
     ADDED,
+    ALBUM_ADDED,
     CURRENT_PL,
     PL_SET,
     QUEUE,
@@ -13,6 +14,9 @@ import {
 } from './slack-resp';
 
 let _apiRoot;
+
+export const isAlbumLink = link =>
+    link.includes(':album:') || link.includes('/album/');
 
 export function setAPIRoot(url) {
     _apiRoot = url;
@@ -51,6 +55,24 @@ export function queueTrack(track, requestedBy) {
         .then(resp =>
             // eslint-disable-next-line babel/new-cap
             ADDED(resp.track, resp.position)
+        );
+}
+
+export function queueAlbum(link, requestedBy) {
+    const uri = `${_apiRoot}/api/spotify/queue/album`;
+    const body = {
+        album: link,
+        requestedBy
+    };
+    return request
+        .post({
+            uri,
+            body,
+            json: true
+        })
+        .then(({ album, position }) =>
+            // eslint-disable-next-line babel/new-cap
+            ALBUM_ADDED(position, album, requestedBy)
         );
 }
 
@@ -150,6 +172,9 @@ export function exec({ text, user_name, command }) {
         case '/play':
             return playTrack(text, user_name);
         case '/add':
+            if (isAlbumLink(text)) {
+                return queueAlbum(text, user_name)
+            }
             return queueTrack(text, user_name);
         case '/skip':
             return skipTrack();

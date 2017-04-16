@@ -7,6 +7,7 @@ import sinon from 'sinon';
 
 import { exec, setAPIRoot } from '../src/commands';
 import {
+    ALBUM_ADDED,
     NOW_PLAYING,
     SHUFFLING,
     NOT_SHUFFLING
@@ -79,6 +80,48 @@ describe('The Slack commands for Spotify Local ', () => {
                             artist: 'Kenny G',
                             requestedBy: 'Default Playlist'
                         }));
+                        done();
+                    })
+                    .catch(done);
+            });
+        });
+    });
+
+    describe('the /add command', () => {
+        const command = '/add';
+
+        context('with a link to a spotify album', () => {
+
+            const id = '51XjnQQ9SR8VSEpxPO9vrW'
+            const text = `spotify:album:${id}`;
+            const user_name = 'Donald';
+
+            beforeEach((done) => {
+                const mock = `local/spotify/api/queue/album/${id}`;
+                sinon.stub(request, 'post')
+                    .callsFake(() =>
+                        openMock(mock)
+                    );
+                done();
+            });
+
+            afterEach((done) => {
+                request.post.restore();
+                done();
+            });
+
+            it('resolves with text for slack', (done) => {
+
+                const expectedText = ALBUM_ADDED(
+                    1,
+                    { name: 'Aja',  artist: 'Steely Dan'},
+                    user_name
+                );
+
+                exec({ command, text, user_name })
+                    .then((text) => {
+                        expect(text).to.be.a('string');
+                        expect(text).to.eq(expectedText);
                         done();
                     })
                     .catch(done);
