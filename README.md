@@ -76,7 +76,7 @@ To lint the code run:
 $ npm run lint
 ```
 
-###Compiling For Upload
+### Compiling For Upload
 Make sure the bin directory has executable permissions:
 ````
 $ chmod +x ./bin/build.sh
