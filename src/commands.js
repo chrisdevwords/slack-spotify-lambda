@@ -7,7 +7,9 @@ import {
     ADDED,
     CURRENT_PL,
     PL_SET,
-    QUEUE
+    QUEUE,
+    SHUFFLING,
+    NOT_SHUFFLING
 } from './slack-resp';
 
 let _apiRoot;
@@ -92,6 +94,7 @@ export function getQueue() {
             if (!tracks.length) {
                 return 'No tracks currently queued.';
             }
+            // eslint-disable-next-line babel/new-cap
             return QUEUE(tracks);
         });
 }
@@ -130,6 +133,12 @@ export function toggleShuffle() {
         .post({
             uri,
             json: true
+        })
+        .then(({ shuffling }) => {
+            if (shuffling) {
+                return SHUFFLING;
+            }
+            return NOT_SHUFFLING;
         });
 }
 

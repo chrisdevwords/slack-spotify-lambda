@@ -7,7 +7,9 @@ import sinon from 'sinon';
 
 import { exec, setAPIRoot } from '../src/commands';
 import {
-    NOW_PLAYING
+    NOW_PLAYING,
+    SHUFFLING,
+    NOT_SHUFFLING
 } from '../src/slack-resp';
 const { beforeEach, afterEach, describe, it } = mocha;
 const { expect, config } = chai;
@@ -90,17 +92,53 @@ describe('The Slack commands for Spotify Local ', () => {
 
         context('when the player is shuffling', () => {
 
-            it.skip('resolves with text for slack', (done) => {
-
+            beforeEach((done) => {
+                sinon.stub(request, 'post')
+                    .callsFake(() =>
+                        openMock('local/spotify/api/shuffle/true')
+                    );
                 done();
+            });
+
+            afterEach((done) => {
+                request.post.restore();
+                done();
+            });
+
+            it('resolves with text for slack', (done) => {
+                exec({ command })
+                    .then((text) => {
+                        expect(text).to.be.a('string');
+                        expect(text).to.eq(SHUFFLING);
+                        done();
+                    })
+                    .catch(done);
             });
         });
 
         context('when the player is not shuffling', () => {
 
-            it.skip('resolves with text for slack', (done) => {
-
+            beforeEach((done) => {
+                sinon.stub(request, 'post')
+                    .callsFake(() =>
+                        openMock('local/spotify/api/shuffle/false')
+                    );
                 done();
+            });
+
+            afterEach((done) => {
+                request.post.restore();
+                done();
+            });
+
+            it('resolves with text for slack', (done) => {
+                exec({ command })
+                    .then((text) => {
+                        expect(text).to.be.a('string');
+                        expect(text).to.eq(NOT_SHUFFLING);
+                        done();
+                    })
+                    .catch(done);
             });
         });
     });

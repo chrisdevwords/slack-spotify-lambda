@@ -10,6 +10,8 @@ export const INVALID_TOKEN = 'Token is invalid.';
 
 // message templates
 export const CMD_NOT_SUPPORTED = 'Command not supported.';
+export const SHUFFLING = 'Spotify player is now shuffling.';
+export const NOT_SHUFFLING = 'Spotify player is no longer shuffling.';
 
 export const TRACK = ({ name, artist, requestedBy }) =>
     `"${name}" by ${artist} requested by ${requestedBy}`;
