@@ -14,11 +14,54 @@ SPOTIFY_LOCAL_URL=https://xxx.ngrok.io
 SLACK_TOKEN=THE_TOKEN_YOUR_SLACK_APP_SENDS_IN_POST_BODY
 ```
 
-Requirementsf
+Requirements
 ------------
 * Requires Node v4.3.2 
 * Package engine is set to strict to match [AWS Lambda Environment](https://aws.amazon.com/blogs/compute/node-js-4-3-2-runtime-now-available-on-lambda/)
 * I recommend using [NVM](https://github.com/creationix/nvm)
+
+## Slash Commands
+Add the following commands to your Slack app in order to control an instance of [Spotify Local](https://github.com/chrisdevwords/spotify-local).
+When adding the slash commands to Slack be sure to point all commands at a POST endpoint for the Lambda's corresponding API Gateway. 
+
+### What's currently playing?
+```
+/playing
+```
+
+### Skip the track that's currently playing. Be nice.
+```
+/skip
+```
+
+### Add a track to the queue.
+``` 
+/add [spotify track id, uri or http link]
+```
+
+### Print the list of queued tracks.
+```
+/queue
+```
+
+### Get or set the default playlist.
+``` 
+# sets the playlist
+/playlist [spotify playlist id, uri or http link]
+
+# gets the playlist
+/playlist
+```
+
+### Plays a song immediately.
+``` 
+/play [spotify track id, uri or http link]
+```
+
+### Toggle shuffle of playlist playback. 
+```
+/shuffle
+```
 
 ## Running Tests
 This project includes [Mocha](https://mochajs.org/) and [Chai](http://chaijs.com/). If you add to this, write more tests. And run them:
