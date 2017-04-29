@@ -6,13 +6,12 @@
     "type": "git",
     "url": "https://github.com/chrisdevwords/slack-spotify-lambda.git"
   },
-  "main": "./dist/index",
+  "main": "./src/index",
   "scripts": {
     "test": "nyc mocha ./test",
     "lint": "eslint src/",
-    "compile": "rm -rf dist && babel -d dist/ src/",
     "zip": "./bin/build-zip.sh",
-    "build": "npm run compile && npm run zip"
+    "build": "npm run zip"
   },
   "keywords": [
     "lambda",
@@ -23,25 +22,18 @@
     "spotify"
   ],
   "engines": {
-    "node": "4.3.2"
+    "node": "6.10"
   },
   "engine-strict": true,
   "author": "chrisedwards82@gmail.com",
   "license": "LicenseRef-LICENSE",
   "devDependencies": {
-    "babel-cli": "^6.18.0",
-    "babel-core": "^6.21.0",
-    "babel-plugin-array-includes": "^2.0.3",
-    "babel-polyfill": "^6.20.0",
-    "babel-preset-es2015": "^6.18.0",
     "chai": "^3.5.0",
     "coveralls": "^2.11.15",
     "dotenv": "^4.0.0",
-    "eslint": "^3.12.2",
-    "eslint-config-airbnb": "^13.0.0",
-    "eslint-plugin-babel": "^4.0.0",
+    "eslint": "^3.14.1",
+    "eslint-config-airbnb-base": "^11.1.3",
     "eslint-plugin-import": "^2.2.0",
-    "eslint-plugin-react": "^6.8.0",
     "mocha": "^3.2.0",
     "mocha-lcov-reporter": "^1.2.0",
     "nyc": "^10.0.0",

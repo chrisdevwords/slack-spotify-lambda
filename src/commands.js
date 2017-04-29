@@ -1,6 +1,6 @@
+const request = require('request-promise-native');
 
-import request from 'request-promise-native';
-import {
+const {
     CMD_NOT_SUPPORTED,
     NOW_PLAYING,
     SKIPPED,
@@ -13,18 +13,19 @@ import {
     NOT_SHUFFLING,
     PAUSED,
     RESUMED,
-} from './slack-resp';
+} = require('./slack-resp');
+
 
 let _apiRoot;
 
-export const isAlbumLink = link =>
+const isAlbumLink = link =>
     link.includes(':album:') || link.includes('/album/');
 
-export function setAPIRoot(url) {
+function setAPIRoot(url) {
     _apiRoot = url;
 }
 
-export function playTrack(track, requestedBy) {
+function playTrack(track, requestedBy) {
     const uri = `${_apiRoot}/api/spotify/playing`;
     const body = {
         track,
@@ -42,7 +43,7 @@ export function playTrack(track, requestedBy) {
         );
 }
 
-export function queueTrack(track, requestedBy) {
+function queueTrack(track, requestedBy) {
     const uri = `${_apiRoot}/api/spotify/queue`;
     const body = {
         track,
@@ -60,7 +61,7 @@ export function queueTrack(track, requestedBy) {
         );
 }
 
-export function queueAlbum(link, requestedBy) {
+function queueAlbum(link, requestedBy) {
     const uri = `${_apiRoot}/api/spotify/queue/album`;
     const body = {
         album: link,
@@ -78,7 +79,7 @@ export function queueAlbum(link, requestedBy) {
         );
 }
 
-export function skipTrack() {
+function skipTrack() {
     const uri = `${_apiRoot}/api/spotify/playing`;
     return request
         .delete({
@@ -100,7 +101,7 @@ function getPlayingTrack() {
         });
 }
 
-export function getPlaying() {
+function getPlaying() {
     return getPlayingTrack()
         .then(({ track }) =>
             // eslint-disable-next-line babel/new-cap
@@ -108,7 +109,7 @@ export function getPlaying() {
         );
 }
 
-export function getQueue() {
+function getQueue() {
     const uri = `${_apiRoot}/api/spotify/queue`;
     return request
         .get({
@@ -124,7 +125,7 @@ export function getQueue() {
         });
 }
 
-export function getPlaylist() {
+function getPlaylist() {
     const uri = `${_apiRoot}/api/spotify/playlist`;
     return request
         .get({
@@ -137,7 +138,7 @@ export function getPlaylist() {
         );
 }
 
-export function setPlaylist(playlist) {
+function setPlaylist(playlist) {
     const uri = `${_apiRoot}/api/spotify/playlist`;
     const body = { playlist }
     return request
@@ -152,7 +153,7 @@ export function setPlaylist(playlist) {
         );
 }
 
-export function toggleShuffle() {
+function toggleShuffle() {
     const uri = `${_apiRoot}/api/spotify/shuffle`;
     return request
         .post({
@@ -167,7 +168,7 @@ export function toggleShuffle() {
         });
 }
 
-export function pause() {
+function pause() {
     return getPlayingTrack()
         .then(({ track }) =>
             request
@@ -183,7 +184,7 @@ export function pause() {
         );
 }
 
-export function resume() {
+function resume() {
     return getPlayingTrack()
         .then(({ track }) =>
             request
@@ -199,7 +200,7 @@ export function resume() {
         );
 }
 
-export function exec({ text, user_name, command }) {
+function exec({ text, user_name, command }) {
 
     let error;
 
@@ -235,4 +236,7 @@ export function exec({ text, user_name, command }) {
     }
 }
 
-export default {};
+module.exports = {
+    setAPIRoot,
+    exec
+};

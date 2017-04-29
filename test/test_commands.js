@@ -1,25 +1,25 @@
-import fs from 'fs';
-import PATH from 'path';
-import mocha from 'mocha';
-import chai from 'chai';
-import request from 'request-promise-native';
-import sinon from 'sinon';
+const PATH = require('path');
+const fs = require('fs');
+const { beforeEach, afterEach, describe, it } = require('mocha');
+const { expect, config } = require('chai');
+const request = require('request-promise-native');
+const sinon = require('sinon');
+const dotenv = require('dotenv');
 
-import { exec, setAPIRoot } from '../src/commands';
-import {
+const { exec, setAPIRoot } = require('../src/commands');
+const {
     ALBUM_ADDED,
     NOW_PLAYING,
     SHUFFLING,
     NOT_SHUFFLING,
     PAUSED,
     RESUMED
-} from '../src/slack-resp';
-const { beforeEach, afterEach, describe, it } = mocha;
-const { expect, config } = chai;
+} = require('../src/slack-resp');
+
 const context = describe;
 
-config.includeStack = true;
 
+config.includeStack = true;
 
 const openMock = (filePath) => {
 

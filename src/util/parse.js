@@ -1,5 +1,5 @@
 
-export function parseFormString(str = '') {
+function parseFormString(str = '') {
     const parts = str.split('&');
     const data = {};
     parts.forEach((item) => {
@@ -9,7 +9,7 @@ export function parseFormString(str = '') {
     return data;
 }
 
-export function processRequestError(req) {
+function processRequestError(req) {
     if (req instanceof Error && req.name !== 'StatusCodeError') {
         throw req;
     }
@@ -19,4 +19,7 @@ export function processRequestError(req) {
     throw err;
 }
 
-export default {}
+module.exports = {
+    parseFormString,
+    processRequestError
+};

@@ -1,60 +1,56 @@
+const { response } = require('./util/lambda');
 
-import { response } from './util/lambda';
 
 // response types
-export const TYPE_PRIVATE = 'ephemeral';
-export const TYPE_PUBLIC = 'in_channel';
+const TYPE_PRIVATE = 'ephemeral';
+const TYPE_PUBLIC = 'in_channel';
 
 // error messages
-export const INVALID_TOKEN = 'Token is invalid.';
+const INVALID_TOKEN = 'Token is invalid.';
 
 // message templates
-export const CMD_NOT_SUPPORTED = 'Command not supported.';
-export const SHUFFLING = 'Spotify player is now shuffling.';
-export const NOT_SHUFFLING = 'Spotify player is no longer shuffling.';
+const CMD_NOT_SUPPORTED = 'Command not supported.';
+const SHUFFLING = 'Spotify player is now shuffling.';
+const NOT_SHUFFLING = 'Spotify player is no longer shuffling.';
 
-export const TRACK = ({ name, artist, requestedBy }) =>
+const TRACK = ({ name, artist, requestedBy }) =>
     `"${name}" by ${artist} requested by ${requestedBy}`;
 
-export const CURRENT_PL = ({ title }) =>
+const CURRENT_PL = ({ title }) =>
     `Current Playlist is "${title}".`;
 
-export const PL_SET = ({ title }) =>
+const PL_SET = ({ title }) =>
     `Current Playlist set to "${title}".`;
 
-export const ADDED  = (track, position) =>
+const ADDED  = (track, position) =>
     // eslint-disable-next-line babel/new-cap
     `${TRACK(track)} at position ${position}.`;
 
-export const NOW_PLAYING = track =>
+const NOW_PLAYING = track =>
     // eslint-disable-next-line babel/new-cap
     `Now playing ${TRACK(track)}.`;
 
-export const SKIPPED = (current, { name, requestedBy }) =>
+const SKIPPED = (current, { name, requestedBy }) =>
     // eslint-disable-next-line babel/new-cap
     `Skipped "${name}" requested by ${requestedBy}. ${NOW_PLAYING(current)}`;
 
-export const ALBUM_ADDED = (position, { artist, name }, by) =>
+const ALBUM_ADDED = (position, { artist, name }, by) =>
     `Album "${name}" by ${artist} queued by ${by} at position ${position}`;
 
-export const PAUSED = track =>
+const PAUSED = track =>
     // eslint-disable-next-line babel/new-cap
     `Pausing ${TRACK(track)}.`;
 
-export const RESUMED = track =>
+const RESUMED = track =>
     // eslint-disable-next-line babel/new-cap
     `Resuming ${TRACK(track)}.`;
 
-export function printQueue(tracks) {
-    return tracks
-        .map(TRACK)
-        .join('\n');
-}
+const printQueue = tracks => tracks.map(TRACK).join('\n');
 
-export const QUEUE = tracks =>
+const QUEUE = tracks =>
     `${tracks.length} tracks queued... \n ${printQueue(tracks)}`;
 
-export function slackResp(text, code = 200, type = TYPE_PUBLIC) {
+function slackResp(text, code = 200, type = TYPE_PUBLIC) {
     return response({
         // eslint-disable-next-line camelcase
         response_type: type,
@@ -62,4 +58,23 @@ export function slackResp(text, code = 200, type = TYPE_PUBLIC) {
     }, code);
 }
 
-export default {}
+module.exports = {
+    TYPE_PRIVATE,
+    TYPE_PUBLIC,
+    INVALID_TOKEN,
+    CMD_NOT_SUPPORTED,
+    SHUFFLING,
+    NOT_SHUFFLING,
+    TRACK,
+    CURRENT_PL,
+    PL_SET,
+    ADDED,
+    NOW_PLAYING,
+    SKIPPED,
+    ALBUM_ADDED,
+    PAUSED,
+    RESUMED,
+    QUEUE,
+    printQueue,
+    slackResp
+};
