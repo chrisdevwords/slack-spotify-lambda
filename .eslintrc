@@ -27,20 +27,13 @@
         "generator-star-spacing": 1,
         "new-cap": 0,
         "object-curly-spacing": 0,
-        "object-shorthand": 1,
-
-        // Babel //
-        "babel/new-cap": 1,
-        "babel/object-curly-spacing": [1, "always"],
+        "object-shorthand": 1
     },
     "parserOptions": {
-         "ecmaFeatures": {
-             "experimentalObjectRestSpread": true
-         }
+        "ecmaFeatures": {
+            "experimentalObjectRestSpread": true
+        }
     },
-    "plugins": [
-        "babel"
-    ],
     "settings": {
         "ecmascript": 6
     },
@@ -48,5 +41,5 @@
         "browser": true,
         "node": true
     },
-    "extends" : "airbnb/base"
+    "extends" : "airbnb-base"
 }
