@@ -37,6 +37,14 @@ export const SKIPPED = (current, { name, requestedBy }) =>
 export const ALBUM_ADDED = (position, { artist, name }, by) =>
     `Album "${name}" by ${artist} queued by ${by} at position ${position}`;
 
+export const PAUSED = track =>
+    // eslint-disable-next-line babel/new-cap
+    `Pausing ${TRACK(track)}.`;
+
+export const RESUMED = track =>
+    // eslint-disable-next-line babel/new-cap
+    `Resuming ${TRACK(track)}.`;
+
 export function printQueue(tracks) {
     return tracks
         .map(TRACK)

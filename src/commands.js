@@ -10,7 +10,9 @@ import {
     PL_SET,
     QUEUE,
     SHUFFLING,
-    NOT_SHUFFLING
+    NOT_SHUFFLING,
+    PAUSED,
+    RESUMED,
 } from './slack-resp';
 
 let _apiRoot;
@@ -90,15 +92,16 @@ export function skipTrack() {
 
 }
 
-export function getPlaying() {
-
-    const uri = `${_apiRoot}/api/spotify/playing/`;
-
+function getPlayingTrack() {
     return request
         .get({
-            uri,
+            uri:`${_apiRoot}/api/spotify/playing/`,
             json: true
-        })
+        });
+}
+
+export function getPlaying() {
+    return getPlayingTrack()
         .then(({ track }) =>
             // eslint-disable-next-line babel/new-cap
             NOW_PLAYING(track)
@@ -164,6 +167,38 @@ export function toggleShuffle() {
         });
 }
 
+export function pause() {
+    return getPlayingTrack()
+        .then(({ track }) =>
+            request
+                .post({
+                    uri: `${_apiRoot}/api/spotify/pause`,
+                    json: true,
+                    body: {
+                        paused: true
+                    }
+                })
+                // eslint-disable-next-line babel/new-cap
+                .then(() => PAUSED(track))
+        );
+}
+
+export function resume() {
+    return getPlayingTrack()
+        .then(({ track }) =>
+            request
+                .post({
+                    uri: `${_apiRoot}/api/spotify/pause`,
+                    json: true,
+                    body: {
+                        paused: false
+                    }
+                })
+                // eslint-disable-next-line babel/new-cap
+                .then(() => RESUMED(track))
+        );
+}
+
 export function exec({ text, user_name, command }) {
 
     let error;
@@ -184,6 +219,10 @@ export function exec({ text, user_name, command }) {
             return getQueue();
         case '/shuffle':
             return toggleShuffle();
+        case '/pause':
+            return pause();
+        case '/resume':
+            return resume();
         case '/playlist':
             if (text) {
                 return setPlaylist(text);

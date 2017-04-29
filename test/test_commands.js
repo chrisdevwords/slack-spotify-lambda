@@ -10,7 +10,9 @@ import {
     ALBUM_ADDED,
     NOW_PLAYING,
     SHUFFLING,
-    NOT_SHUFFLING
+    NOT_SHUFFLING,
+    PAUSED,
+    RESUMED
 } from '../src/slack-resp';
 const { beforeEach, afterEach, describe, it } = mocha;
 const { expect, config } = chai;
@@ -183,6 +185,76 @@ describe('The Slack commands for Spotify Local ', () => {
                     })
                     .catch(done);
             });
+        });
+    });
+
+    describe('the /pause command', () => {
+
+        const command = '/pause';
+
+        beforeEach((done) => {
+            sinon.stub(request, 'get')
+                .callsFake(() =>
+                    openMock('local/spotify/api/playing')
+                );
+            sinon.stub(request, 'post')
+                .resolves({ paused: true });
+            done();
+        });
+
+        afterEach((done) => {
+            request.get.restore();
+            request.post.restore();
+            done();
+        });
+
+        it('resolves with text for slack', (done) => {
+            exec({ command })
+                .then((text) => {
+                    expect(text).to.be.a('string');
+                    expect(text).to.eq(PAUSED({
+                        name: 'Sax Attack',
+                        artist: 'Kenny G',
+                        requestedBy: 'Default Playlist'
+                    }));
+                    done();
+                })
+                .catch(done);
+        });
+    });
+
+    describe('the /resume command', () => {
+
+        const command = '/resume';
+
+        beforeEach((done) => {
+            sinon.stub(request, 'get')
+                .callsFake(() =>
+                    openMock('local/spotify/api/playing')
+                );
+            sinon.stub(request, 'post')
+                .resolves({ paused: false });
+            done();
+        });
+
+        afterEach((done) => {
+            request.get.restore();
+            request.post.restore();
+            done();
+        });
+
+        it('resolves with text for slack', (done) => {
+            exec({ command })
+                .then((text) => {
+                    expect(text).to.be.a('string');
+                    expect(text).to.eq(RESUMED({
+                        name: 'Sax Attack',
+                        artist: 'Kenny G',
+                        requestedBy: 'Default Playlist'
+                    }));
+                    done();
+                })
+                .catch(done);
         });
     });
 });
