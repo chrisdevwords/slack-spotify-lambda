@@ -1,17 +1,15 @@
+const PATH = require('path');
+const { beforeEach, afterEach, describe, it } = require('mocha');
+const { expect, config } = require('chai');
+const request = require('request-promise-native');
+const sinon = require('sinon');
+const dotenv = require('dotenv');
 
-import PATH from 'path';
-import mocha from 'mocha';
-import chai from 'chai';
-import request from 'request-promise-native';
-import sinon from 'sinon';
-import dotenv from 'dotenv';
+const { handler } = require('../src');
+const mockPlaying = require('./mock/local/spotify/api/playing.json');
 
-import { handler } from '../src';
-import mockPlaying from './mock/local/spotify/api/playing.json';
-
-const { beforeEach, afterEach, describe, it } = mocha;
-const { expect, config } = chai;
 const context = describe;
+
 
 config.includeStack = true;
 

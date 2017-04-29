@@ -1,11 +1,9 @@
+const { describe, it } = require('mocha');
+const { expect, config } = require('chai');
+const request = require('request-promise-native');
 
-import mocha from 'mocha';
-import chai from 'chai';
+const{ parseFormString } = require('../../src/util/parse');
 
-import { parseFormString } from '../../src/util/parse';
-
-const { beforeEach, afterEach, describe, it } = mocha;
-const { expect, config } = chai;
 const context = describe;
 
 config.includeStack = true;

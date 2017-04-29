@@ -1,13 +1,11 @@
-
-import {
-    parseFormString
-} from './util/parse';
-import { exec, setAPIRoot } from './commands';
-import {
+const { parseFormString } = require('./util/parse');
+const { exec, setAPIRoot } = require('./commands');
+const {
     slackResp,
     INVALID_TOKEN,
     TYPE_PRIVATE
-} from './slack-resp';
+} = require('./slack-resp');
+
 
 function handler(event, context, callback) {
 
@@ -47,7 +45,6 @@ function handler(event, context, callback) {
     }
 }
 
-export {
-    // eslint-disable-next-line import/prefer-default-export
+module.exports = {
     handler
-}
+};
