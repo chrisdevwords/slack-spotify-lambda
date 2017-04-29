@@ -16,8 +16,8 @@ SLACK_TOKEN=THE_TOKEN_YOUR_SLACK_APP_SENDS_IN_POST_BODY
 
 Requirements
 ------------
-* Requires Node v4.3.2 
-* Package engine is set to strict to match [AWS Lambda Environment](https://aws.amazon.com/blogs/compute/node-js-4-3-2-runtime-now-available-on-lambda/)
+* Requires Node v6.10 
+* Package engine is set to strict to match [AWS Lambda Environment](https://aws.amazon.com/about-aws/whats-new/2017/03/aws-lambda-supports-node-js-6-10/)
 * I recommend using [NVM](https://github.com/creationix/nvm)
 
 ## Slash Commands
@@ -80,7 +80,7 @@ $ npm test
 ````
 
 ### Contributing
-All code is transpiled from ES6 with Babel. The lint config is based on [AirBnB's eslint](https://www.npmjs.com/package/eslint-config-airbnb).
+The lint config is based on [AirBnB's eslint](https://www.npmjs.com/package/eslint-config-airbnb).
 To lint the code run:
 ```
 $ npm run lint
@@ -96,7 +96,7 @@ If this throws an error, trying using sudo:
 $ sudo chmod +x .bin/build.sh
 ```
 
-Transpile the ES6 and zip up the relevant files for upload by running:
+Zip up the source code and runtime dependencies for upload by running:
 ````
 $ npm run build
 ````
