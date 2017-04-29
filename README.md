@@ -63,6 +63,16 @@ When adding the slash commands to Slack be sure to point all commands at a POST 
 /shuffle
 ```
 
+### Pause the music. 
+```
+/pause
+```
+
+### Resume the music. 
+```
+/resume
+```
+
 ## Running Tests
 This project includes [Mocha](https://mochajs.org/) and [Chai](http://chaijs.com/). If you add to this, write more tests. And run them:
 ````
