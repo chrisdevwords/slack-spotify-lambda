@@ -37,5 +37,12 @@ describe('The Parse Utils', () => {
                 done();
             })
         });
+
+        context('with an undefined string', () => {
+            it('doesn\'t throw an error', () => {
+                const obj = parseFormString();
+                expect(obj).to.be.an('Object');
+            });
+        });
     });
 });
