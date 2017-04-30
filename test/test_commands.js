@@ -89,6 +89,50 @@ describe('The Slack commands for Spotify Local ', () => {
         });
     });
 
+    describe('the /play command', () => {
+        const command = '/play';
+
+        context('with a link to a spotify track', () => {
+
+            const id = '0Q7aj2T90BmSCv2fLyUkTJ';
+            const text = `spotify:track:${id}`;
+            const user_name = 'Donald';
+
+            beforeEach((done) => {
+                const mock = `local/spotify/api/play/${id}`;
+                sinon.stub(request, 'post')
+                    .callsFake(() =>
+                        openMock(mock)
+                    );
+                done();
+            });
+
+            afterEach((done) => {
+                request.post.restore();
+                done();
+            });
+
+            it('resolves with text for slack', (done) => {
+
+                const expectedText = NOW_PLAYING(
+                    {
+                        name: 'Dancing In the Sheets',
+                        artist: 'Shalamar',
+                        requestedBy: user_name
+                    }
+                );
+
+                exec({ command, text, user_name })
+                    .then((text) => {
+                        expect(text).to.be.a('string');
+                        expect(text).to.eq(expectedText);
+                        done();
+                    })
+                    .catch(done);
+            });
+        });
+    });
+
     describe('the /add command', () => {
         const command = '/add';
 
