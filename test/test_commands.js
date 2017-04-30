@@ -12,6 +12,7 @@ const {
     NOW_PLAYING,
     PL_SET,
     CURRENT_PL,
+    SKIPPED,
     SHUFFLING,
     NOT_SHUFFLING,
     PAUSED,
@@ -240,6 +241,46 @@ describe('The Slack commands for Spotify Local ', () => {
                     })
                     .catch(done);
             });
+        });
+    });
+
+    describe('the /skip command', () => {
+
+        const command = '/skip';
+        const mock = 'local/spotify/api/skip';
+        const expectedResp = SKIPPED(
+            {
+                name: 'Sunflurry',
+                artist: 'Spyro Gyra',
+                requestedBy: 'Default Playlist',
+            },
+            {
+                name: 'You Gotta Get It While You Can',
+                requestedBy: 'Default Playlist'
+            }
+        );
+
+        beforeEach((done) => {
+            sinon.stub(request, 'delete')
+                .callsFake(() =>
+                    openMock(mock)
+                );
+            done();
+        });
+
+        afterEach((done) => {
+            request.delete.restore();
+            done();
+        });
+
+        it('resolves with text for slack', (done) => {
+            exec({ command })
+                .then((text) => {
+                    expect(text).to.be.a('string');
+                    expect(text).to.eq(expectedResp);
+                    done();
+                })
+                .catch(done);
         });
     });
 
