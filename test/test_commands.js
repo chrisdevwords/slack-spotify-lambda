@@ -10,6 +10,8 @@ const { exec, setAPIRoot } = require('../src/commands');
 const {
     ALBUM_ADDED,
     NOW_PLAYING,
+    PL_SET,
+    CURRENT_PL,
     SHUFFLING,
     NOT_SHUFFLING,
     PAUSED,
@@ -168,6 +170,72 @@ describe('The Slack commands for Spotify Local ', () => {
                     .then((text) => {
                         expect(text).to.be.a('string');
                         expect(text).to.eq(expectedText);
+                        done();
+                    })
+                    .catch(done);
+            });
+        });
+    });
+
+    describe('the /playlist command', () => {
+
+        const command = '/playlist';
+        const id = '37i9dQZF1DX0uqkwkR49kK';
+        const title = 'Prog Rock Monsters';
+        const mock = `local/spotify/api/playlist/${id}`;
+
+        context('with a playlist uri', () => {
+
+            const text = `spotify:user:spotify:playlist:${id}`;
+            const expectedResp = PL_SET({ title });
+
+            beforeEach((done) => {
+                sinon.stub(request, 'post')
+                    .callsFake(() =>
+                        openMock(mock)
+                    );
+                done();
+            });
+
+            afterEach((done) => {
+                request.post.restore();
+                done();
+            });
+
+            it('resolves with text for slack', (done) => {
+                exec({ command, text })
+                    .then((text) => {
+                        expect(text).to.be.a('string');
+                        expect(text).to.eq(expectedResp);
+                        done();
+                    })
+                    .catch(done);
+            });
+        });
+
+        context('with an empty text message', () => {
+
+            const text = '';
+            const expectedResp = CURRENT_PL({ title });
+
+            beforeEach((done) => {
+                sinon.stub(request, 'get')
+                    .callsFake(() =>
+                        openMock(mock)
+                    );
+                done();
+            });
+
+            afterEach((done) => {
+                request.get.restore();
+                done();
+            });
+
+            it('resolves with text for slack', (done) => {
+                exec({ command, text })
+                    .then((text) => {
+                        expect(text).to.be.a('string');
+                        expect(text).to.eq(expectedResp);
                         done();
                     })
                     .catch(done);
