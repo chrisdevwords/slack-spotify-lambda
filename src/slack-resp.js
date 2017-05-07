@@ -17,6 +17,11 @@ const NONE_QUEUED = 'No tracks currently queued.';
 const TRACK = ({ name, artist, requestedBy }) =>
     `"${name}" by ${artist} requested by ${requestedBy}`;
 
+const VOLUME = vol => `Volume is at ${vol}`;
+
+const VOLUME_SET = (vol, user) =>
+    `Volume set to ${vol} by ${user}.`;
+
 const CURRENT_PL = ({ title }) =>
     `Current Playlist is "${title}".`;
 
@@ -77,6 +82,8 @@ module.exports = {
     RESUMED,
     QUEUE,
     NONE_QUEUED,
+    VOLUME,
+    VOLUME_SET,
     printQueue,
     slackResp
 };

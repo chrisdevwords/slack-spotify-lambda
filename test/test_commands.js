@@ -18,7 +18,9 @@ const {
     SHUFFLING,
     NOT_SHUFFLING,
     PAUSED,
-    RESUMED
+    RESUMED,
+    VOLUME,
+    VOLUME_SET
 } = require('../src/slack-resp');
 
 const context = describe;
@@ -512,6 +514,64 @@ describe('The Slack commands for Spotify Local ', () => {
                     done();
                 })
                 .catch(done);
+        });
+    });
+
+    describe('the /volume command', () => {
+       const command = '/volume';
+       const user_name = 'cranky joe';
+
+       context('With a number as the text', () => {
+           beforeEach((done) => {
+               sinon.stub(request, 'post')
+                   .callsFake(() =>
+                       openMock('local/spotify/api/volume/post/0')
+                   );
+               done();
+           });
+
+           afterEach((done) => {
+               request.post.restore();
+               done();
+           });
+
+            const text = '0';
+            it('responds with text for slack', (done) => {
+                exec({ command, user_name, text})
+                    .then((text) => {
+                        expect(text).to.be.a('string');
+                        expect(text).to.eq(VOLUME_SET(0, user_name));
+                        done();
+                    })
+                    .catch(done);
+            }) ;
+       });
+
+        context('With no text', () => {
+
+            beforeEach((done) => {
+                sinon.stub(request, 'get')
+                    .callsFake(() =>
+                        openMock('local/spotify/api/volume/get/50')
+                    );
+                done();
+            });
+
+            afterEach((done) => {
+                request.get.restore();
+                done();
+            });
+
+            const text = '';
+            it('responds with text for slack', (done) => {
+                exec({ command, user_name, text})
+                    .then((text) => {
+                        expect(text).to.be.a('string');
+                        expect(text).to.eq(VOLUME(50));
+                        done();
+                    })
+                    .catch(done);
+            }) ;
         });
     });
 });
