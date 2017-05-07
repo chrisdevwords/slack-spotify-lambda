@@ -20,7 +20,8 @@ const {
     PAUSED,
     RESUMED,
     VOLUME,
-    VOLUME_SET
+    VOLUME_SET,
+    SAID
 } = require('../src/slack-resp');
 
 const context = describe;
@@ -572,6 +573,36 @@ describe('The Slack commands for Spotify Local ', () => {
                     })
                     .catch(done);
             }) ;
+        });
+    });
+
+    describe('the /say command', () => {
+
+        const command = '/say';
+        const text = 'Is this thing on?';
+        const user_name = 'chris';
+
+        beforeEach((done) => {
+            sinon.stub(request, 'post')
+                .resolves(() =>
+                    { message: text }
+                );
+            done();
+        });
+
+        afterEach((done) => {
+            request.post.restore();
+            done();
+        });
+
+        it('Responds with text for Slack.', (done) => {
+            exec({ text, user_name, command })
+                .then((resp) => {
+                    expect(resp).to.be.a('string');
+                    expect(resp).to.eq(SAID(text, user_name));
+                    done();
+                })
+                .catch(done);
         });
     });
 });

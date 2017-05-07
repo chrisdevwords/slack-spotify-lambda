@@ -51,6 +51,9 @@ const RESUMED = track =>
     // eslint-disable-next-line babel/new-cap
     `Resuming ${TRACK(track)}.`;
 
+const SAID = (text, user) =>
+    `${user} said "${text}".`;
+
 const printQueue = tracks => tracks.map(TRACK).join('\n');
 
 const QUEUE = tracks =>
@@ -84,6 +87,7 @@ module.exports = {
     NONE_QUEUED,
     VOLUME,
     VOLUME_SET,
+    SAID,
     printQueue,
     slackResp
 };

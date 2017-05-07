@@ -15,7 +15,8 @@ const {
     PAUSED,
     RESUMED,
     VOLUME,
-    VOLUME_SET
+    VOLUME_SET,
+    SAID
 } = require('./slack-resp');
 
 
@@ -230,6 +231,21 @@ function setVolume(volume, user) {
         );
 }
 
+function say(text, user) {
+    const uri = `${_apiRoot}/api/os/speech`;
+    return request
+        .post({
+            uri,
+            json: true,
+            body: {
+                message: text
+            }
+        })
+        .then(resp =>
+            SAID(text, user)
+        );
+}
+
 function exec({ text, user_name, command }) {
 
     let error;
@@ -259,6 +275,8 @@ function exec({ text, user_name, command }) {
             return pause();
         case '/resume':
             return resume();
+        case '/say':
+            return say(text, user_name);
         case '/playlist':
             if (text) {
                 return setPlaylist(text);
