@@ -9,6 +9,7 @@ const {
     CURRENT_PL,
     PL_SET,
     QUEUE,
+    NONE_QUEUED,
     SHUFFLING,
     NOT_SHUFFLING,
     PAUSED,
@@ -118,7 +119,7 @@ function getQueue() {
         })
         .then(({ tracks }) => {
             if (!tracks.length) {
-                return 'No tracks currently queued.';
+                return NONE_QUEUED;
             }
             // eslint-disable-next-line babel/new-cap
             return QUEUE(tracks);

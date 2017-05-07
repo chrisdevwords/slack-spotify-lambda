@@ -9,6 +9,7 @@ const dotenv = require('dotenv');
 const { exec, setAPIRoot } = require('../src/commands');
 const {
     ADDED,
+    NONE_QUEUED,
     ALBUM_ADDED,
     NOW_PLAYING,
     PL_SET,
@@ -140,7 +141,7 @@ describe('The Slack commands for Spotify Local ', () => {
     describe('the /queue command', () => {
         const command = '/queue';
 
-        context('when the spotify local server is running', () => {
+        context('when there are tracks in the queue', () => {
             beforeEach((done) => {
                 sinon.stub(request, 'get')
                     .callsFake(() =>
@@ -166,6 +167,31 @@ describe('The Slack commands for Spotify Local ', () => {
                             '"JoHn Muir" by ScHoolboy Q requested by Donald\n' +
                             '"My Collection" by Future requested by Mike'
                         );
+                        done();
+                    })
+                    .catch(done);
+            });
+        });
+
+        context('when there no are tracks in the queue', () => {
+            beforeEach((done) => {
+                sinon.stub(request, 'get')
+                    .callsFake(() =>
+                        openMock('local/spotify/api/queue/empty')
+                    );
+                done();
+            });
+
+            afterEach((done) => {
+                request.get.restore();
+                done();
+            });
+
+            it('resolves with text for slack', (done) => {
+                exec({ command })
+                    .then((text) => {
+                        expect(text).to.be.a('string');
+                        expect(text).to.eq(NONE_QUEUED);
                         done();
                     })
                     .catch(done);

@@ -12,6 +12,7 @@ const INVALID_TOKEN = 'Token is invalid.';
 const CMD_NOT_SUPPORTED = 'Command not supported.';
 const SHUFFLING = 'Spotify player is now shuffling.';
 const NOT_SHUFFLING = 'Spotify player is no longer shuffling.';
+const NONE_QUEUED = 'No tracks currently queued.';
 
 const TRACK = ({ name, artist, requestedBy }) =>
     `"${name}" by ${artist} requested by ${requestedBy}`;
@@ -75,6 +76,7 @@ module.exports = {
     PAUSED,
     RESUMED,
     QUEUE,
+    NONE_QUEUED,
     printQueue,
     slackResp
 };
