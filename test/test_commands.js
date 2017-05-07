@@ -137,6 +137,42 @@ describe('The Slack commands for Spotify Local ', () => {
         });
     });
 
+    describe('the /queue command', () => {
+        const command = '/queue';
+
+        context('when the spotify local server is running', () => {
+            beforeEach((done) => {
+                sinon.stub(request, 'get')
+                    .callsFake(() =>
+                        openMock('local/spotify/api/queue')
+                    );
+                done();
+            });
+
+            afterEach((done) => {
+                request.get.restore();
+                done();
+            });
+
+            it('resolves with text for slack', (done) => {
+                exec({ command })
+                    .then((text) => {
+                        expect(text).to.be.a('string');
+                        expect(text).to.eq(
+                            '5 tracks queued... \n ' +
+                            '"Blood on Me" by Sampha requested by Donald\n' +
+                            '"You Are in My System" by The System requested by Walter\n'+
+                            '"Running Up That Hill (A Deal With God)" by Kate Bush requested by Jeff\n' +
+                            '"JoHn Muir" by ScHoolboy Q requested by Donald\n' +
+                            '"My Collection" by Future requested by Mike'
+                        );
+                        done();
+                    })
+                    .catch(done);
+            });
+        });
+    });
+
     describe('the /add command', () => {
         const command = '/add';
 
