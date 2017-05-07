@@ -82,6 +82,11 @@ When adding the slash commands to Slack be sure to point all commands at a POST 
 /volume
 ```
 
+### Say something funny or useful.
+``` 
+/say [something funny or useful]
+```
+
 ## Running Tests
 This project includes [Mocha](https://mochajs.org/) and [Chai](http://chaijs.com/). If you add to this, write more tests. And run them:
 ````
