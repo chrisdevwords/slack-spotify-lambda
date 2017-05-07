@@ -8,6 +8,7 @@ const dotenv = require('dotenv');
 
 const { exec, setAPIRoot } = require('../src/commands');
 const {
+    ADDED,
     ALBUM_ADDED,
     NOW_PLAYING,
     PL_SET,
@@ -165,6 +166,47 @@ describe('The Slack commands for Spotify Local ', () => {
                     1,
                     { name: 'Aja',  artist: 'Steely Dan'},
                     user_name
+                );
+
+                exec({ command, text, user_name })
+                    .then((text) => {
+                        expect(text).to.be.a('string');
+                        expect(text).to.eq(expectedText);
+                        done();
+                    })
+                    .catch(done);
+            });
+        });
+
+        context('with a link to a spotify track', () => {
+
+            const id = '37el170lJYr5CiWJFk207u';
+            const text = `spotify:track:${id}`;
+            const user_name = 'Donald';
+
+            beforeEach((done) => {
+                const mock = `local/spotify/api/queue/${id}`;
+                sinon.stub(request, 'post')
+                    .callsFake(() =>
+                        openMock(mock)
+                    );
+                done();
+            });
+
+            afterEach((done) => {
+                request.post.restore();
+                done();
+            });
+
+            it('resolves with text for slack', (done) => {
+
+                const expectedText = ADDED(
+                    {
+                        name: 'Blood on Me',
+                        artist: 'Sampha',
+                        requestedBy: user_name
+                    },
+                    1
                 );
 
                 exec({ command, text, user_name })
