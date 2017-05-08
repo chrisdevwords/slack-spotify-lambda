@@ -12,9 +12,15 @@ const INVALID_TOKEN = 'Token is invalid.';
 const CMD_NOT_SUPPORTED = 'Command not supported.';
 const SHUFFLING = 'Spotify player is now shuffling.';
 const NOT_SHUFFLING = 'Spotify player is no longer shuffling.';
+const NONE_QUEUED = 'No tracks currently queued.';
 
 const TRACK = ({ name, artist, requestedBy }) =>
     `"${name}" by ${artist} requested by ${requestedBy}`;
+
+const VOLUME = vol => `Volume is at ${vol}`;
+
+const VOLUME_SET = (vol, user) =>
+    `Volume set to ${vol} by ${user}.`;
 
 const CURRENT_PL = ({ title }) =>
     `Current Playlist is "${title}".`;
@@ -44,6 +50,9 @@ const PAUSED = track =>
 const RESUMED = track =>
     // eslint-disable-next-line babel/new-cap
     `Resuming ${TRACK(track)}.`;
+
+const SAID = (text, user) =>
+    `${user} said "${text}".`;
 
 const printQueue = tracks => tracks.map(TRACK).join('\n');
 
@@ -75,6 +84,10 @@ module.exports = {
     PAUSED,
     RESUMED,
     QUEUE,
+    NONE_QUEUED,
+    VOLUME,
+    VOLUME_SET,
+    SAID,
     printQueue,
     slackResp
 };

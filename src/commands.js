@@ -9,10 +9,14 @@ const {
     CURRENT_PL,
     PL_SET,
     QUEUE,
+    NONE_QUEUED,
     SHUFFLING,
     NOT_SHUFFLING,
     PAUSED,
     RESUMED,
+    VOLUME,
+    VOLUME_SET,
+    SAID
 } = require('./slack-resp');
 
 
@@ -118,7 +122,7 @@ function getQueue() {
         })
         .then(({ tracks }) => {
             if (!tracks.length) {
-                return 'No tracks currently queued.';
+                return NONE_QUEUED;
             }
             // eslint-disable-next-line babel/new-cap
             return QUEUE(tracks);
@@ -200,6 +204,48 @@ function resume() {
         );
 }
 
+function getVolume() {
+    const uri = `${_apiRoot}/api/spotify/volume`;
+    return request
+        .get({
+            uri,
+            json: true
+        })
+        .then(({ volume }) =>
+            VOLUME(volume)
+        );
+}
+
+function setVolume(volume, user) {
+    const uri = `${_apiRoot}/api/spotify/volume`;
+    return request
+        .post({
+            uri,
+            json: true,
+            body: {
+                volume
+            }
+        })
+        .then(resp =>
+            VOLUME_SET(resp.volume, user)
+        );
+}
+
+function say(text, user) {
+    const uri = `${_apiRoot}/api/os/speech`;
+    return request
+        .post({
+            uri,
+            json: true,
+            body: {
+                message: text.split('+').join(' ')
+            }
+        })
+        .then(resp =>
+            SAID(resp.message, user)
+        );
+}
+
 function exec({ text, user_name, command }) {
 
     let error;
@@ -212,6 +258,11 @@ function exec({ text, user_name, command }) {
                 return queueAlbum(text, user_name)
             }
             return queueTrack(text, user_name);
+        case '/volume':
+            if (text.trim().length && !isNaN(text)) {
+                return setVolume(text, user_name);
+            }
+            return getVolume();
         case '/skip':
             return skipTrack();
         case '/playing':
@@ -224,6 +275,8 @@ function exec({ text, user_name, command }) {
             return pause();
         case '/resume':
             return resume();
+        case '/say':
+            return say(text, user_name);
         case '/playlist':
             if (text) {
                 return setPlaylist(text);

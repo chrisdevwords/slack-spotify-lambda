@@ -8,6 +8,8 @@ const dotenv = require('dotenv');
 
 const { exec, setAPIRoot } = require('../src/commands');
 const {
+    ADDED,
+    NONE_QUEUED,
     ALBUM_ADDED,
     NOW_PLAYING,
     PL_SET,
@@ -16,7 +18,10 @@ const {
     SHUFFLING,
     NOT_SHUFFLING,
     PAUSED,
-    RESUMED
+    RESUMED,
+    VOLUME,
+    VOLUME_SET,
+    SAID
 } = require('../src/slack-resp');
 
 const context = describe;
@@ -136,6 +141,67 @@ describe('The Slack commands for Spotify Local ', () => {
         });
     });
 
+    describe('the /queue command', () => {
+        const command = '/queue';
+
+        context('when there are tracks in the queue', () => {
+            beforeEach((done) => {
+                sinon.stub(request, 'get')
+                    .callsFake(() =>
+                        openMock('local/spotify/api/queue')
+                    );
+                done();
+            });
+
+            afterEach((done) => {
+                request.get.restore();
+                done();
+            });
+
+            it('resolves with text for slack', (done) => {
+                exec({ command })
+                    .then((text) => {
+                        expect(text).to.be.a('string');
+                        expect(text).to.eq(
+                            '5 tracks queued... \n ' +
+                            '"Blood on Me" by Sampha requested by Donald\n' +
+                            '"You Are in My System" by The System requested by Walter\n'+
+                            '"Running Up That Hill (A Deal With God)" by Kate Bush requested by Jeff\n' +
+                            '"JoHn Muir" by ScHoolboy Q requested by Donald\n' +
+                            '"My Collection" by Future requested by Mike'
+                        );
+                        done();
+                    })
+                    .catch(done);
+            });
+        });
+
+        context('when there no are tracks in the queue', () => {
+            beforeEach((done) => {
+                sinon.stub(request, 'get')
+                    .callsFake(() =>
+                        openMock('local/spotify/api/queue/empty')
+                    );
+                done();
+            });
+
+            afterEach((done) => {
+                request.get.restore();
+                done();
+            });
+
+            it('resolves with text for slack', (done) => {
+                exec({ command })
+                    .then((text) => {
+                        expect(text).to.be.a('string');
+                        expect(text).to.eq(NONE_QUEUED);
+                        done();
+                    })
+                    .catch(done);
+            });
+        });
+    });
+
     describe('the /add command', () => {
         const command = '/add';
 
@@ -165,6 +231,47 @@ describe('The Slack commands for Spotify Local ', () => {
                     1,
                     { name: 'Aja',  artist: 'Steely Dan'},
                     user_name
+                );
+
+                exec({ command, text, user_name })
+                    .then((text) => {
+                        expect(text).to.be.a('string');
+                        expect(text).to.eq(expectedText);
+                        done();
+                    })
+                    .catch(done);
+            });
+        });
+
+        context('with a link to a spotify track', () => {
+
+            const id = '37el170lJYr5CiWJFk207u';
+            const text = `spotify:track:${id}`;
+            const user_name = 'Donald';
+
+            beforeEach((done) => {
+                const mock = `local/spotify/api/queue/${id}`;
+                sinon.stub(request, 'post')
+                    .callsFake(() =>
+                        openMock(mock)
+                    );
+                done();
+            });
+
+            afterEach((done) => {
+                request.post.restore();
+                done();
+            });
+
+            it('resolves with text for slack', (done) => {
+
+                const expectedText = ADDED(
+                    {
+                        name: 'Blood on Me',
+                        artist: 'Sampha',
+                        requestedBy: user_name
+                    },
+                    1
                 );
 
                 exec({ command, text, user_name })
@@ -405,6 +512,97 @@ describe('The Slack commands for Spotify Local ', () => {
                         artist: 'Kenny G',
                         requestedBy: 'Default Playlist'
                     }));
+                    done();
+                })
+                .catch(done);
+        });
+    });
+
+    describe('the /volume command', () => {
+       const command = '/volume';
+       const user_name = 'cranky joe';
+
+       context('With a number as the text', () => {
+           beforeEach((done) => {
+               sinon.stub(request, 'post')
+                   .callsFake(() =>
+                       openMock('local/spotify/api/volume/post/0')
+                   );
+               done();
+           });
+
+           afterEach((done) => {
+               request.post.restore();
+               done();
+           });
+
+            const text = '0';
+            it('responds with text for slack', (done) => {
+                exec({ command, user_name, text})
+                    .then((text) => {
+                        expect(text).to.be.a('string');
+                        expect(text).to.eq(VOLUME_SET(0, user_name));
+                        done();
+                    })
+                    .catch(done);
+            }) ;
+       });
+
+        context('With no text', () => {
+
+            beforeEach((done) => {
+                sinon.stub(request, 'get')
+                    .callsFake(() =>
+                        openMock('local/spotify/api/volume/get/50')
+                    );
+                done();
+            });
+
+            afterEach((done) => {
+                request.get.restore();
+                done();
+            });
+
+            const text = '';
+            it('responds with text for slack', (done) => {
+                exec({ command, user_name, text})
+                    .then((text) => {
+                        expect(text).to.be.a('string');
+                        expect(text).to.eq(VOLUME(50));
+                        done();
+                    })
+                    .catch(done);
+            }) ;
+        });
+    });
+
+    describe('the /say command', () => {
+
+        const command = '/say';
+        const text = 'Is+this+thing+on?';
+        const user_name = 'chris';
+
+        beforeEach((done) => {
+            sinon.stub(request, 'post')
+                .resolves(
+                    { message: 'Is this thing on?' }
+                );
+            done();
+        });
+
+        afterEach((done) => {
+            request.post.restore();
+            done();
+        });
+
+        it('Responds with text for Slack.', (done) => {
+            exec({ text, user_name, command })
+                .then((resp) => {
+                    expect(resp).to.be.a('string');
+                    expect(resp).to.eq(SAID(
+                        'Is this thing on?',
+                        user_name
+                    ));
                     done();
                 })
                 .catch(done);
