@@ -238,12 +238,15 @@ function say(text, user) {
             uri,
             json: true,
             body: {
-                message: text
+                message: text.replace('+', ' ')
             }
         })
-        .then(resp =>
-            SAID(text, user)
-        );
+        .then(resp => {
+
+
+            console.log(resp)
+            return SAID(resp.message, user)
+        });
 }
 
 function exec({ text, user_name, command }) {

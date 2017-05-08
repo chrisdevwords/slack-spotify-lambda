@@ -579,13 +579,13 @@ describe('The Slack commands for Spotify Local ', () => {
     describe('the /say command', () => {
 
         const command = '/say';
-        const text = 'Is this thing on?';
+        const text = 'Is+this+thing+on?';
         const user_name = 'chris';
 
         beforeEach((done) => {
             sinon.stub(request, 'post')
-                .resolves(() =>
-                    { message: text }
+                .resolves(
+                    { message: 'Is this thing on?' }
                 );
             done();
         });
@@ -599,7 +599,10 @@ describe('The Slack commands for Spotify Local ', () => {
             exec({ text, user_name, command })
                 .then((resp) => {
                     expect(resp).to.be.a('string');
-                    expect(resp).to.eq(SAID(text, user_name));
+                    expect(resp).to.eq(SAID(
+                        'Is this thing on?',
+                        user_name
+                    ));
                     done();
                 })
                 .catch(done);
