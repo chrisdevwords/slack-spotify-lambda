@@ -21,7 +21,7 @@ const {
     RESUMED,
     VOLUME,
     VOLUME_SET,
-    SAID
+    SOMEONE_ELSE_IS_TALKING
 } = require('../src/slack-resp');
 
 const context = describe;
@@ -577,35 +577,63 @@ describe('The Slack commands for Spotify Local ', () => {
     });
 
     describe('the /say command', () => {
+        context('when it works', () => {
+            const command = '/say';
+            const text = 'Is+this+thing+on?';
+            const user_name = 'chris';
 
-        const command = '/say';
-        const text = 'Is+this+thing+on?';
-        const user_name = 'chris';
+            beforeEach((done) => {
+                sinon.stub(request, 'post')
+                    .resolves(
+                        { message: 'Is this thing on?' }
+                    );
+                done();
+            });
 
-        beforeEach((done) => {
-            sinon.stub(request, 'post')
-                .resolves(
-                    { message: 'Is this thing on?' }
-                );
-            done();
+            afterEach((done) => {
+                request.post.restore();
+                done();
+            });
+
+            it('Responds with empty text.', (done) => {
+                exec({ text, user_name, command })
+                    .then((resp) => {
+                        expect(resp).to.be.a('string');
+                        expect(resp).to.eq('');
+                        done();
+                    })
+                    .catch(done);
+            });
         });
 
-        afterEach((done) => {
-            request.post.restore();
-            done();
+        context('when it encounters a status code 429', () => {
+            const command = '/say';
+            const text = 'Is+this+thing+on?';
+            const user_name = 'chris';
+
+            beforeEach((done) => {
+                sinon.stub(request, 'post')
+                    .rejects(
+                        { statusCode: 429 }
+                    );
+                done();
+            });
+
+            afterEach((done) => {
+                request.post.restore();
+                done();
+            });
+
+            it('Responds with text for slack.', (done) => {
+                exec({ text, user_name, command })
+                    .then((resp) => {
+                        expect(resp).to.be.a('string');
+                        expect(resp).to.eq(SOMEONE_ELSE_IS_TALKING);
+                        done();
+                    })
+                    .catch(done);
+            });
         });
 
-        it('Responds with text for Slack.', (done) => {
-            exec({ text, user_name, command })
-                .then((resp) => {
-                    expect(resp).to.be.a('string');
-                    expect(resp).to.eq(SAID(
-                        'Is this thing on?',
-                        user_name
-                    ));
-                    done();
-                })
-                .catch(done);
-        });
     });
 });
