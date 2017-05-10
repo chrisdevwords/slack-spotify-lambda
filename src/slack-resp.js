@@ -13,6 +13,8 @@ const CMD_NOT_SUPPORTED = 'Command not supported.';
 const SHUFFLING = 'Spotify player is now shuffling.';
 const NOT_SHUFFLING = 'Spotify player is no longer shuffling.';
 const NONE_QUEUED = 'No tracks currently queued.';
+const SOMEONE_ELSE_IS_TALKING = 'Someone else is talking. Wait your turn.';
+
 
 const TRACK = ({ name, artist, requestedBy }) =>
     `"${name}" by ${artist} requested by ${requestedBy}`;
@@ -51,9 +53,6 @@ const RESUMED = track =>
     // eslint-disable-next-line babel/new-cap
     `Resuming ${TRACK(track)}.`;
 
-const SAID = (text, user) =>
-    `${user} said "${text}".`;
-
 const printQueue = tracks => tracks.map(TRACK).join('\n');
 
 const QUEUE = tracks =>
@@ -68,6 +67,7 @@ function slackResp(text, code = 200, type = TYPE_PUBLIC) {
 }
 
 module.exports = {
+    SOMEONE_ELSE_IS_TALKING,
     TYPE_PRIVATE,
     TYPE_PUBLIC,
     INVALID_TOKEN,
@@ -87,7 +87,6 @@ module.exports = {
     NONE_QUEUED,
     VOLUME,
     VOLUME_SET,
-    SAID,
     printQueue,
     slackResp
 };
