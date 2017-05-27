@@ -205,7 +205,7 @@ function resume() {
 }
 
 function getVolume() {
-    const uri = `${_apiRoot}/api/spotify/volume`;
+    const uri = `${_apiRoot}/api/os/volume`;
     return request
         .get({
             uri,
@@ -217,7 +217,7 @@ function getVolume() {
 }
 
 function setVolume(volume, user) {
-    const uri = `${_apiRoot}/api/spotify/volume`;
+    const uri = `${_apiRoot}/api/os/volume`;
     return request
         .post({
             uri,

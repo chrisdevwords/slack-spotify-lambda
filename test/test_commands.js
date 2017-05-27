@@ -526,7 +526,7 @@ describe('The Slack commands for Spotify Local ', () => {
            beforeEach((done) => {
                sinon.stub(request, 'post')
                    .callsFake(() =>
-                       openMock('local/spotify/api/volume/post/0')
+                       openMock('local/os/volume/post/0')
                    );
                done();
            });
@@ -553,7 +553,7 @@ describe('The Slack commands for Spotify Local ', () => {
             beforeEach((done) => {
                 sinon.stub(request, 'get')
                     .callsFake(() =>
-                        openMock('local/spotify/api/volume/get/50')
+                        openMock('local/os/volume/get/50')
                     );
                 done();
             });
