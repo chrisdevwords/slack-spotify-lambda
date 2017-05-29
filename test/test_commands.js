@@ -21,6 +21,7 @@ const {
     RESUMED,
     VOLUME,
     VOLUME_SET,
+    INVALID_NUMBER,
     SOMEONE_ELSE_IS_TALKING
 } = require('../src/slack-resp');
 
@@ -163,7 +164,7 @@ describe('The Slack commands for Spotify Local ', () => {
                     .then((text) => {
                         expect(text).to.be.a('string');
                         expect(text).to.eq(
-                            '5 tracks queued... \n ' +
+                            '5 tracks queued...\n' +
                             '"Blood on Me" by Sampha requested by Donald\n' +
                             '"You Are in My System" by The System requested by Walter\n'+
                             '"Running Up That Hill (A Deal With God)" by Kate Bush requested by Jeff\n' +
@@ -634,6 +635,164 @@ describe('The Slack commands for Spotify Local ', () => {
                     .catch(done);
             });
         });
+    });
+
+    describe('The /dequeue command', () => {
+        const command = '/dequeue';
+        const user_name = 'david';
+
+        context('with text "all"', () => {
+
+            const text = 'all';
+
+            context('when there are tracks in the queue', () => {
+                beforeEach((done) => {
+                    sinon.stub(request, 'delete')
+                        .callsFake(() =>
+                            openMock('local/spotify/api/queue/delete')
+                        );
+                    done();
+                });
+
+                afterEach((done) => {
+                    request.delete.restore();
+                    done();
+                });
+
+                it('resolves with text for slack', (done) => {
+                    exec({ command, user_name, text })
+                        .then((resp) => {
+                            expect(resp).to.be.a('string');
+                            expect(resp).to.eq(
+                                'Queue cleared by david. Tracks removed:\n' +
+                                '"Blood on Me" by Sampha requested by Donald\n' +
+                                '"You Are in My System" by The System requested by Walter\n'+
+                                '"Running Up That Hill (A Deal With God)" by Kate Bush requested by Jeff\n' +
+                                '"JoHn Muir" by ScHoolboy Q requested by Donald\n' +
+                                '"My Collection" by Future requested by Mike'
+                            );
+                            done();
+                        })
+                        .catch(done);
+                });
+            });
+
+            context('when there no are tracks in the queue', () => {
+                beforeEach((done) => {
+                    sinon.stub(request, 'delete')
+                        .callsFake(() =>
+                            openMock('local/spotify/api/queue/empty')
+                        );
+                    done();
+                });
+
+                afterEach((done) => {
+                    request.delete.restore();
+                    done();
+                });
+
+                it('resolves with text for slack', (done) => {
+                    exec({ command, user_name, text })
+                        .then((resp) => {
+                            expect(resp).to.be.a('string');
+                            expect(resp).to.eq(NONE_QUEUED);
+                            done();
+                        })
+                        .catch(done);
+                });
+            });
+        });
+
+        context("with a number", () => {
+            const text = '1';
+            context('when there are tracks in the queue', () => {
+                beforeEach((done) => {
+                    sinon.stub(request, 'delete')
+                        .callsFake(() =>
+                            openMock('local/spotify/api/queue/1')
+                        );
+                    done();
+                });
+
+                afterEach((done) => {
+                    request.delete.restore();
+                    done();
+                });
+
+                it('resolves with text for slack', (done) => {
+                    exec({ command, user_name, text })
+                        .then((resp) => {
+                            expect(resp).to.be.a('string');
+                            expect(resp).to.eq(
+                                '"Blood on Me" by Sampha requested by Donald removed by david.'
+                            );
+                            done();
+                        })
+                        .catch(done);
+                });
+            });
+        });
+
+        context("with an invalid string", () => {
+            const text = 'first';
+            context('when there are tracks in the queue', () => {
+                it('rejects the promise with text for slack', (done) => {
+                    exec({ command, user_name, text })
+                        .then(() => {
+                            done(Error('Promise should be rejected.'))
+                        })
+                        .catch(({ message, statusCode }) => {
+                            expect(message).to.be.a('string');
+                            expect(statusCode).to.eq(400);
+                            expect(message).to.eq(INVALID_NUMBER(text));
+                            done();
+                        })
+                        .catch(done);
+                });
+            });
+        });
+
 
     });
+
+    describe('The /remove command', () => {
+
+        const command = '/remove';
+        const user_name = 'david';
+
+        describe('does the same thing as /dequeue', () => {
+            const text = 'all';
+
+            beforeEach((done) => {
+                sinon.stub(request, 'delete')
+                    .callsFake(() =>
+                        openMock('local/spotify/api/queue/delete')
+                    );
+                done();
+            });
+
+            afterEach((done) => {
+                request.delete.restore();
+                done();
+            });
+
+            it('resolves with text for slack', (done) => {
+                exec({ command, user_name, text })
+                    .then((resp) => {
+                        expect(resp).to.be.a('string');
+                        expect(resp).to.eq(
+                            'Queue cleared by david. Tracks removed:\n' +
+                            '"Blood on Me" by Sampha requested by Donald\n' +
+                            '"You Are in My System" by The System requested by Walter\n'+
+                            '"Running Up That Hill (A Deal With God)" by Kate Bush requested by Jeff\n' +
+                            '"JoHn Muir" by ScHoolboy Q requested by Donald\n' +
+                            '"My Collection" by Future requested by Mike'
+                        );
+                        done();
+                    })
+                    .catch(done);
+            });
+        });
+    });
+
 });
