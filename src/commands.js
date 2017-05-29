@@ -305,7 +305,6 @@ function exec({ text, user_name, command }) {
         case '/queue':
             return getQueue();
         case '/dequeue':
-        case '/remove':
             if (isNaN(text)) {
                 if (text.toLowerCase().trim() === 'all') {
                     return clearQueue(user_name)

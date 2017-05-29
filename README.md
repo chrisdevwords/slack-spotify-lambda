@@ -54,11 +54,6 @@ When adding the slash commands to Slack be sure to point all commands at a POST 
 /dequeue all
 ```
 
-### Remove is easier to spell than dequeue...
-```
-/remove all
-```
-
 ### Get or set the default playlist.
 ``` 
 # sets the playlist

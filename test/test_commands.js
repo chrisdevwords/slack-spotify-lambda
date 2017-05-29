@@ -754,45 +754,4 @@ describe('The Slack commands for Spotify Local ', () => {
 
 
     });
-
-    describe('The /remove command', () => {
-
-        const command = '/remove';
-        const user_name = 'david';
-
-        describe('does the same thing as /dequeue', () => {
-            const text = 'all';
-
-            beforeEach((done) => {
-                sinon.stub(request, 'delete')
-                    .callsFake(() =>
-                        openMock('local/spotify/api/queue/delete')
-                    );
-                done();
-            });
-
-            afterEach((done) => {
-                request.delete.restore();
-                done();
-            });
-
-            it('resolves with text for slack', (done) => {
-                exec({ command, user_name, text })
-                    .then((resp) => {
-                        expect(resp).to.be.a('string');
-                        expect(resp).to.eq(
-                            'Queue cleared by david. Tracks removed:\n' +
-                            '"Blood on Me" by Sampha requested by Donald\n' +
-                            '"You Are in My System" by The System requested by Walter\n'+
-                            '"Running Up That Hill (A Deal With God)" by Kate Bush requested by Jeff\n' +
-                            '"JoHn Muir" by ScHoolboy Q requested by Donald\n' +
-                            '"My Collection" by Future requested by Mike'
-                        );
-                        done();
-                    })
-                    .catch(done);
-            });
-        });
-    });
-
 });
