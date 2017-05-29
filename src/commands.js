@@ -9,6 +9,9 @@ const {
     CURRENT_PL,
     PL_SET,
     QUEUE,
+    INVALID_NUMBER,
+    QUEUE_CLEARED,
+    DEQUEUED,
     NONE_QUEUED,
     SHUFFLING,
     NOT_SHUFFLING,
@@ -129,6 +132,34 @@ function getQueue() {
         });
 }
 
+function deQueue(trackNumber, user) {
+    const index = trackNumber - 1;
+    const uri = `${_apiRoot}/api/spotify/queue/${index}`;
+    return request
+        .delete({
+            uri,
+            json: true
+        })
+        .then(({ track }) =>
+            DEQUEUED(track, user)
+        );
+}
+
+function clearQueue(user) {
+    const uri = `${_apiRoot}/api/spotify/queue`;
+    return request
+        .delete({
+            uri,
+            json: true
+        })
+        .then(({ tracks }) => {
+            if (tracks.length) {
+                return QUEUE_CLEARED(tracks, user);
+            }
+            return NONE_QUEUED;
+        });
+}
+
 function getPlaylist() {
     const uri = `${_apiRoot}/api/spotify/playlist`;
     return request
@@ -205,7 +236,7 @@ function resume() {
 }
 
 function getVolume() {
-    const uri = `${_apiRoot}/api/spotify/volume`;
+    const uri = `${_apiRoot}/api/os/volume`;
     return request
         .get({
             uri,
@@ -217,7 +248,7 @@ function getVolume() {
 }
 
 function setVolume(volume, user) {
-    const uri = `${_apiRoot}/api/spotify/volume`;
+    const uri = `${_apiRoot}/api/os/volume`;
     return request
         .post({
             uri,
@@ -273,6 +304,17 @@ function exec({ text, user_name, command }) {
             return getPlaying();
         case '/queue':
             return getQueue();
+        case '/dequeue':
+            if (isNaN(text)) {
+                if (text.toLowerCase().trim() === 'all') {
+                    return clearQueue(user_name)
+                }
+                error = new Error(INVALID_NUMBER(text));
+                error.statusCode = 400;
+                return Promise.reject(error);
+            }
+            return deQueue(text, user_name);
+
         case '/shuffle':
             return toggleShuffle();
         case '/pause':

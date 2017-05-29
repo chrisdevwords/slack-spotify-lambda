@@ -44,6 +44,16 @@ When adding the slash commands to Slack be sure to point all commands at a POST 
 /queue
 ```
 
+### Remove the first track in the queue.
+```
+/dequeue 1
+```
+
+### Remove all tracks from the queue.
+```
+/dequeue all
+```
+
 ### Get or set the default playlist.
 ``` 
 # sets the playlist

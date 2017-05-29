@@ -56,7 +56,16 @@ const RESUMED = track =>
 const printQueue = tracks => tracks.map(TRACK).join('\n');
 
 const QUEUE = tracks =>
-    `${tracks.length} tracks queued... \n ${printQueue(tracks)}`;
+    `${tracks.length} tracks queued...\n${printQueue(tracks)}`;
+
+const DEQUEUED = (track, user) =>
+    `${TRACK(track)} removed by ${user}.`;
+
+const QUEUE_CLEARED = (tracks, user) =>
+    `Queue cleared by ${user}. Tracks removed:\n${printQueue(tracks)}`;
+
+const INVALID_NUMBER = val =>
+    `"${val}" is not a valid number.`;
 
 function slackResp(text, code = 200, type = TYPE_PUBLIC) {
     return response({
@@ -84,6 +93,9 @@ module.exports = {
     PAUSED,
     RESUMED,
     QUEUE,
+    DEQUEUED,
+    QUEUE_CLEARED,
+    INVALID_NUMBER,
     NONE_QUEUED,
     VOLUME,
     VOLUME_SET,
