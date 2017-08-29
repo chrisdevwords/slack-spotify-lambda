@@ -1,5 +1,5 @@
 const { parseFormString } = require('./util/parse');
-const { exec, setAPIRoot } = require('./commands');
+const { exec, setAPIRoot, setAccessToken } = require('./commands');
 const {
     slackResp,
     INVALID_TOKEN,
@@ -11,7 +11,8 @@ function handler(event, context, callback) {
 
     const {
         SLACK_TOKEN,
-        SPOTIFY_LOCAL_URL
+        SPOTIFY_LOCAL_URL,
+        SPOTIFY_USER_ACCESS_TOKEN
     } = process.env;
 
     const {
