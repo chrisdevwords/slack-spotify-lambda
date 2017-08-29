@@ -10,8 +10,7 @@ describe('The radio.getTrackInfo method', () => {
 
     context('With a valid access token', () => {
 
-        //const token = 'valid_token';
-        const token = 'BQDQjpKIiZsP9pqWE1v0J07adPX1uOUzhZLIrMO1EeFi0GhKQ9kpxJWkwk1KFJZBvrgWl92xQmI9PVQIg3F_N78oCyvLRXSutVO2xm1ljA7inwNC6fqpygSNDvdZlwNY-mCQarlaadOww_8gwgmt4_wtwL8y-QHvBvvW4DSL67OCfWg7m1wTACIBe-snBpwVc0J5EojF2I2XfGx3jQycPz9actMjhLO2iXMDukLtOP4cBgDqGjBxOw';
+        const token = 'valid_token';
 
         context('With a valid track id', () => {
 
