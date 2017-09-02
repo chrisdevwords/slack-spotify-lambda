@@ -286,7 +286,12 @@ function say(text) {
         })
 }
 
-function exec({ text, user_name, command }) {
+function radio(text, responseUri) {
+
+}
+
+
+function exec({ text, user_name, command, response_url }) {
 
     let error;
 

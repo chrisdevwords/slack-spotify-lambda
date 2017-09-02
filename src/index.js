@@ -19,6 +19,7 @@ function handler(event, context, callback) {
         command,
         text,
         token,
+        response_url,
         user_name
     } = parseFormString(event.body);
 
