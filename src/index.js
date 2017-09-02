@@ -32,6 +32,7 @@ function handler(event, context, callback) {
         );
     } else {
         setAPIRoot(SPOTIFY_LOCAL_URL);
+        setAccessToken(SPOTIFY_USER_ACCESS_TOKEN);
         exec({ command, text, user_name })
             .then((message) => {
                 callback(null,
