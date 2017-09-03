@@ -1,5 +1,8 @@
 const request = require('request-promise-native');
-const { extractFromUri } = require('./util/parse')
+const { extractFromUri } = require('./util/parse');
+const { PL_PENDING } = require('./slack-resp');
+const aws = require('./aws');
+
 
 const API_BASE = 'https://api.spotify.com/v1';
 const ERROR_EXPIRED_TOKEN = 'Spotify User Access token ' +
@@ -70,7 +73,26 @@ module.exports = {
 
     },
 
-    createRadioStation(text, accessToken, responseUrl) {
-
+    createRadioStation(text, responseUrl) {
+        const trackId = extractFromUri(text, 'track');
+        return this
+            .getTrackInfo(trackId)
+            .then(trackInfo =>
+                aws.invokeLambda({
+                    FunctionName: _functionARN,
+                    InvocationType: 'Event',
+                    LogType: 'Tail',
+                    Payload: JSON.stringify({
+                        body: {
+                            track:trackInfo,
+                            response_url: responseUrl
+                        }
+                    })
+                }).then(() => PL_PENDING(trackInfo))
+            )
+            .catch(({ message }) => Promise.reject({
+                message,
+                statusCode: 200
+            }));
     }
 };
