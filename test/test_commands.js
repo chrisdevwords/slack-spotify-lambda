@@ -7,6 +7,7 @@ const sinon = require('sinon');
 const dotenv = require('dotenv');
 
 const { exec, setAPIRoot } = require('../src/commands');
+const radio = require('../src/radio');
 const {
     ADDED,
     NONE_QUEUED,
@@ -22,7 +23,8 @@ const {
     VOLUME,
     VOLUME_SET,
     INVALID_NUMBER,
-    SOMEONE_ELSE_IS_TALKING
+    SOMEONE_ELSE_IS_TALKING,
+    PL_PENDING
 } = require('../src/slack-resp');
 
 const context = describe;
@@ -637,6 +639,35 @@ describe('The Slack commands for Spotify Local ', () => {
         });
     });
 
+    describe('The /radio command', () => {
+
+        const command = '/radio';
+        const text = 'spotify:track:7bJ9wwhHylDAcarYbUzX9Q';
+        const user_name = 'chris';
+        const response_url = 'http://foo.bar.com';
+        const expectedMessage = PL_PENDING({
+            name: 'Spaceship Orion',
+            artist: 'The Ozark Mountain Daredevils'
+        })
+
+        beforeEach(() => {
+            sinon.stub(radio, 'createRadioStation')
+                .resolves(expectedMessage)
+        });
+        afterEach(() => {
+            radio.createRadioStation.restore();
+        });
+
+        it('resolves with a command for slack', (done) => {
+            exec({ command, user_name, text, response_url })
+                .then((resp) => {
+                    expect(resp).to.eq(expectedMessage);
+                    done();
+                })
+                .catch(done);
+        })
+    });
+
     describe('The /dequeue command', () => {
         const command = '/dequeue';
         const user_name = 'david';
@@ -751,7 +782,5 @@ describe('The Slack commands for Spotify Local ', () => {
                 });
             });
         });
-
-
     });
 });

@@ -1,5 +1,5 @@
 const request = require('request-promise-native');
-
+const radio = require('./radio');
 const {
     CMD_NOT_SUPPORTED,
     NOW_PLAYING,
@@ -281,11 +281,6 @@ function say(text) {
         })
 }
 
-function radio(text, responseUri) {
-
-}
-
-
 function exec({ text, user_name, command, response_url }) {
 
     let error;
@@ -333,6 +328,9 @@ function exec({ text, user_name, command, response_url }) {
                 return setPlaylist(text);
             }
             return getPlaylist();
+        case '/radio':
+            return radio
+                .createRadioStation(text, response_url);
         default:
             error = new Error(CMD_NOT_SUPPORTED);
             error.statusCode = 400;
