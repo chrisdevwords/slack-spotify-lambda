@@ -24,17 +24,12 @@ const {
 
 
 let _apiRoot;
-let _accessToken;
 
 const isAlbumLink = link =>
     link.includes(':album:') || link.includes('/album/');
 
 function setAPIRoot(url) {
     _apiRoot = url;
-}
-
-function setAccessToken(token) {
-    _accessToken = token;
 }
 
 function playTrack(track, requestedBy) {
@@ -346,7 +341,6 @@ function exec({ text, user_name, command, response_url }) {
 }
 
 module.exports = {
-    setAccessToken,
     setAPIRoot,
     exec
 };

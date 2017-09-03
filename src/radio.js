@@ -10,10 +10,21 @@ const ERROR_INVALID_TRACK_URI = 'Please provide a uri ' +
 const TRACK_ENDPOINT = id =>
     `${API_BASE}/tracks/${id}`;
 
+let _functionARN;
+let _accessToken;
+
 module.exports = {
 
     ERROR_INVALID_TRACK_URI,
     ERROR_EXPIRED_TOKEN,
+
+    setAccessToken(token) {
+        _accessToken = token;
+    },
+
+    setFunctionARN(functionARN) {
+        _functionARN = functionARN
+    },
 
     handleStatusCodeError(err) {
         if (err.error) {
@@ -36,12 +47,12 @@ module.exports = {
         return Promise.reject(err)
     },
 
-    getTrackInfo(trackId, accessToken) {
+    getTrackInfo(trackId) {
         return request
             .get({
                 uri: TRACK_ENDPOINT(trackId),
                 headers: {
-                    Authorization: `Bearer ${accessToken}`
+                    Authorization: `Bearer ${_accessToken}`
                 },
                 json: true
             })

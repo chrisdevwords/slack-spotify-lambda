@@ -37,7 +37,7 @@ describe('The radio.getTrackInfo method', () => {
 
             it('resolves a promise with track info', (done) => {
                 radio
-                    .getTrackInfo(trackId, token)
+                    .getTrackInfo(trackId)
                     .then((trackInfo) => {
                         expect(trackInfo).to.be.an('object');
                         expect(trackInfo).to.not.be.empty;
@@ -48,7 +48,7 @@ describe('The radio.getTrackInfo method', () => {
 
             it('resolves a promise with the track name', (done) => {
                 radio
-                    .getTrackInfo(trackId, token)
+                    .getTrackInfo(trackId)
                     .then(({ name }) => {
                         expect(name).to.equal('Thoughts On Outer Space');
                         done();
@@ -58,7 +58,7 @@ describe('The radio.getTrackInfo method', () => {
 
             it('resolves a promise with the artist name', (done) => {
                 radio
-                    .getTrackInfo(trackId, token)
+                    .getTrackInfo(trackId)
                     .then(({ artist }) => {
                         expect(artist).to.equal('Dick Gregory');
                         done();
@@ -68,7 +68,7 @@ describe('The radio.getTrackInfo method', () => {
 
             it('resolves a promise with an array of artist ids', (done) => {
                 radio
-                    .getTrackInfo(trackId, token)
+                    .getTrackInfo(trackId)
                     .then(({ artistIds }) => {
                         expect(artistIds).to.be.an('array');
                         expect(artistIds).to.have.lengthOf(1);
@@ -80,7 +80,7 @@ describe('The radio.getTrackInfo method', () => {
 
              it('resolves a promise with the track popularity ranking', (done) => {
                 radio
-                    .getTrackInfo(trackId, token)
+                    .getTrackInfo(trackId)
                     .then(({ popularity }) => {
                         expect(popularity).to.equal(21);
                         done();
@@ -113,7 +113,7 @@ describe('The radio.getTrackInfo method', () => {
 
             it('rejects a promise with an error message', (done) => {
                 radio
-                    .getTrackInfo(trackId, token)
+                    .getTrackInfo(trackId)
                     .then(() => {
                         done(Error('This promise should be rejected.'))
                     })
@@ -126,7 +126,7 @@ describe('The radio.getTrackInfo method', () => {
 
             it('rejects a promise with an statusCode 400', (done) => {
                  radio
-                    .getTrackInfo(trackId, token)
+                    .getTrackInfo(trackId)
                     .then(() => {
                         done(Error('This promise should be rejected.'))
                     })
@@ -161,7 +161,7 @@ describe('The radio.getTrackInfo method', () => {
 
             it('rejects a promise with an error message', (done) => {
                 radio
-                    .getTrackInfo(trackId, token)
+                    .getTrackInfo(trackId)
                     .then(() => {
                         done(Error('This promise should be rejected.'))
                     })
@@ -174,7 +174,7 @@ describe('The radio.getTrackInfo method', () => {
 
             it('rejects a promise with an statusCode 404', (done) => {
                  radio
-                    .getTrackInfo(trackId, token)
+                    .getTrackInfo(trackId)
                     .then(() => {
                         done(Error('This promise should be rejected.'))
                     })
@@ -211,7 +211,7 @@ describe('The radio.getTrackInfo method', () => {
 
         it('rejects a promise with an error message', (done) => {
             radio
-                .getTrackInfo(trackId, token)
+                .getTrackInfo(trackId)
                 .then(() => {
                     done(Error('This promise should be rejected.'))
                 })
@@ -224,7 +224,7 @@ describe('The radio.getTrackInfo method', () => {
 
         it('rejects a promise with an statusCode 401', (done) => {
              radio
-                .getTrackInfo(trackId, token)
+                .getTrackInfo(trackId)
                 .then(() => {
                     done(Error('This promise should be rejected.'))
                 })
@@ -260,7 +260,7 @@ describe('The radio.getTrackInfo method', () => {
 
         it('rejects a promise with the api error message', (done) => {
             radio
-                .getTrackInfo(trackId, token)
+                .getTrackInfo(trackId)
                 .then(() => {
                     done(Error('This promise should be rejected.'));
                 })
@@ -273,7 +273,7 @@ describe('The radio.getTrackInfo method', () => {
 
         it('rejects a promise with the api statusCode', (done) => {
              radio
-                .getTrackInfo(trackId, token)
+                .getTrackInfo(trackId)
                 .then(() => {
                     done(Error('This promise should be rejected.'));
                 })
@@ -305,7 +305,7 @@ describe('The radio.getTrackInfo method', () => {
 
         it('rejects a promise with the error', (done) => {
             radio
-                .getTrackInfo(trackId, token)
+                .getTrackInfo(trackId)
                 .then(() => {
                     done(Error('This promise should be rejected.'));
                 })
