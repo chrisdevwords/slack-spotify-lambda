@@ -28,6 +28,7 @@
   "author": "chrisedwards82@gmail.com",
   "license": "LicenseRef-LICENSE",
   "devDependencies": {
+    "aws-sdk": "^2.100.0",
     "chai": "^3.5.0",
     "coveralls": "^2.11.15",
     "dotenv": "^4.0.0",

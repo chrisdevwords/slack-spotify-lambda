@@ -1,4 +1,3 @@
-
 function parseFormString(str = '') {
     const parts = str.split('&');
     const data = {};
@@ -9,6 +8,17 @@ function parseFormString(str = '') {
     return data;
 }
 
+function extractFromUri(uri, property) {
+    const arr = uri.split(':');
+    const propIndex = arr.indexOf(property);
+    if (propIndex === -1) {
+        return undefined;
+    }
+    return arr[propIndex + 1];
+}
+
+
 module.exports = {
-    parseFormString
+    parseFormString,
+    extractFromUri
 };

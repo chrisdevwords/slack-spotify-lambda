@@ -34,6 +34,9 @@ const ADDED  = (track, position) =>
     // eslint-disable-next-line babel/new-cap
     `${TRACK(track)} at position ${position}.`;
 
+const PL_PENDING = ({ name, artist }) =>
+    `Finding tracks based on: "${name}" by ${artist} ...`;
+
 const NOW_PLAYING = track =>
     // eslint-disable-next-line babel/new-cap
     `Now playing ${TRACK(track)}.`;
@@ -83,6 +86,7 @@ module.exports = {
     CMD_NOT_SUPPORTED,
     SHUFFLING,
     NOT_SHUFFLING,
+    PL_PENDING,
     TRACK,
     CURRENT_PL,
     PL_SET,
